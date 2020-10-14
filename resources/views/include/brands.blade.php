@@ -1,5 +1,5 @@
 {{-- <div class="page-section nl-cont grey-dark-bg"> --}}
-    <div class="page-section blue-bg font-white pt-110-b-30-cont">
+    <div class="page-section blue-bg font-white pt-100-b-30-cont">
         <div class="container">
             <div class="relative">
                 <h4>OUR BRANDS</h4>

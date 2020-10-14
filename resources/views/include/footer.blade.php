@@ -6,8 +6,8 @@
       <div class="col-md-4 col-sm-6 widget">
         <div class="logo-footer-cont">
           <a href="/">
-            {{-- <img class="logo-footer" src="images/logo-footer.png" alt="logo"> --}}
-            <label>AZSPREE</label>
+            <img src="/brands_try/small_logo.png" class="logo-img" alt="Azspree">
+            {{-- <label>AZSPREE</label> --}}
           </a>
         </div>
         <div class="footer-2-text-cont">
@@ -38,7 +38,7 @@
       </div>
 
       <div class="col-md-4 col-sm-6 widget">
-        <h4>PAYMENT METHODS</h4>
+        <h4>DELIVERY SERVICES</h4>
           <div class="footer-2-text-cont"> 
             <div class="row mb-30">
               <div class="clearfix">

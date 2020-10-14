@@ -58,7 +58,7 @@
 
                                     <div class="row">
                                         <div class="col-md-12 text-center-xxs">
-                                            <button type="button" class="button medium gray" id="btnto"
+                                            <button type="button" class="button medium blue" id="btnto"
                                                 style="width: 100%">
                                                 TRACK ORDER
                                             </button>

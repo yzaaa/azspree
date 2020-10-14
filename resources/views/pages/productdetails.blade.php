@@ -8,23 +8,17 @@
     <div class="grey-bg">
         <!-- Grey BG  -->
         <!-- PAGE TITLE -->
-        <div class="page-title-cont page-title-small grey-light-bg">
+        {{-- <div class="page-title-cont page-title-small grey-light-bg">
             <div class="relative container align-left">
                 <div class="row">
-
                     <div class="col-md-8">
                         <h1 class="page-title">{{ $data['products']->product_name }}</h1>
-                        {{-- <h1 class="page-title">Product Name</h1>
-                        --}}
                     </div>
-
                     <div class="col-md-4">
-
                     </div>
-
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- CONTENT -->
         <div class="page-section p-140-cont">
@@ -89,22 +83,19 @@
                     <div class="col-md-7 col-sm-12 col-md-offset-1 mb-50">
                         <form id="add-form" autocomplete="off">
 
-                            {{-- <textarea class="mt-0 mb-30">{{ $data['products']->product_name }}</textarea> --}}
+                           
                             
                             <h3><label class="mt-0 mb-30">{{ $data['products']->product_name }}</label></h3>
-                            {{-- <h3 class="mt-0 mb-30">Product Name</h3>
-                            --}}
-
-
+                            <input type="hidden" name="inmr_hash" id="inmr_hash" value="{{ $data['products']->inmr_hash }}" />
+                            <input type="hidden" name="sumr_hash" id="sumr_hash" value="{{ $data['products']->sumr_hash }}" />
                             <hr class="mt-0 mb-30">
                             <div class="row">
 
                                 <div class="col-xs-6  mt-0 mb-30">
                                     {{-- <del>$130.00</del>
                                     --}}
-                                    <strong><label class="item-price">&#8369; {{ $data['products']->cost_amt }}</label></strong>
-                                    {{-- <strong class="item-price">productPrice</strong>
-                                    --}}
+                                    <strong><label class="item-price">&#8369; {{ number_format($data['products']->cost_amt, 2) }}</label></strong>
+                                    <input type="hidden" name="cost_amt" value="{{ $data['products']->cost_amt }}" />
                                 </div>
 
                                 <div class="col-xs-6 text-right">
@@ -170,17 +161,16 @@
                                     --}}
                             
                                         <div class="col-xs-4 col-sm-2 col-md-2 ">
-                                            <input type="number" data-msg-required="Please enter Quantity"
-                                             min="1" max="4" class="input-border"  name="qty" id="qty" required>
-{{-- 
-                                            <input type="number" data-msg-required="Please enter Quantity"
-                                            class="input-border" min="1" max="100" value="1"
-                                                name="qty" id="qty" required> --}}
+                                            {{-- <input type="number" data-msg-required="Please enter Quantity"
+                                             min="1" max="100" class="input-border" name="qty" id="qty" required> --}}
+                                             <input type="number" pattern=" 0+\.[0-9]*[1-9][0-9]*$" 
+                                             onkeypress="return event.charCode >= 48 && event.charCode <= 57" data-msg-required="Please enter Quantity"
+                                             min="1" max="100" class="input-border" name="qty" id="qty" value="1" required>
                                         </div>
                                         <div class="col-xs-8 col-sm-10 col-md-6">
                                             <div class="post-prev-more-cont clearfix">
                                                 <div class="shop-add-btn-cont">
-                                                    <button type="button" id="btnadd" class="button medium gray"
+                                                    <button type="button" id="btnadd" data-user-id="<?php echo session('user_hash'); ?>" class="button medium blue"
                                                         style="width: 100%;">
                                                         <span class=""></span> <label class="btnadd_label">ADD TO CART</label>
                                                     </button>
@@ -238,7 +228,8 @@
                     return false;
                 }
             } else {
-                if ($(this).val() == "") {
+                if ($(this).val() == 0 || $(this).val() == "") {
+                // if ($(this).val() == "") {
                     $('.error_msg').html($(this).data('msg-required'));
                     $('.row-error').fadeIn(400);
                     $(this).closest('.fg-line').addClass('has-error');
@@ -269,10 +260,17 @@
     });
 
     $('#btnadd').click(function() {
-        if (validateRequiredFields($('#add-form'))) {
+        
+        var user_hash = $(this).attr("data-user-id");
+
+        if(user_hash == "" || null){
+            window.location.href = "/login";
+        }else{
+            if (validateRequiredFields($('#add-form'))) {
             $(this).toggleClass('disabled');
             $(this).find('span').toggleClass('fa fa-spinner fa-spin');
             $('.btnadd_label').html('ADDING TO CART');
+
 
             AddCart().done(function(response) {
 
@@ -284,12 +282,13 @@
                     setTimeout(function() {
                         window.location.href = "/";
                     },1000);
-                }
+                } 
             })
             .always(function() {
                 $(this).toggleClass('disabled');
                 $(this).find('span').toggleClass('fa fa-spinner fa-spin');
             });
+            }
         }
 
     });

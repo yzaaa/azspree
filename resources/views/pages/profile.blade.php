@@ -13,11 +13,6 @@
                         <br>
                         <i class="fa fa-envelope"></i> <b style="color:black">{{ $data['profile']->email }}</b><br>
                         <i class="fa fa-phone"></i> <b style="color:black">{{ $data['profile']->contact_no }}</b>
-                        {{-- <b>BUSINESS DETAILS</b> <i class="fa fa-cog"></i>
-                        <hr style="margin:0;padding:0px;">
-                        <i class="fa fa-building"></i> <br />
-                        <i class="fa fa-building"></i> <br />
-                        <i class="fa fa-building"></i> <br /> --}}
                     </div>
                 </div>
             </div>

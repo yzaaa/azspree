@@ -55,7 +55,7 @@
                   
                   <div class="row">
                     <div class="col-md-12 text-center-xxs">
-                        <button type="button" class="button medium gray" id="btnlogin" style="width: 100%">
+                        <button type="button" class="button medium blue" id="btnlogin" style="width: 100%">
                           Log In
                         </button>
                     </div>

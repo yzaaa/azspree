@@ -52,10 +52,22 @@ class PagesController extends Controller
         return view ('pages.trackorder');
     }
 
-    public function topay()
-    {
-        return view ('pages.topay');
+    public function checkout(){
+        if(Session::has('user_hash')){
+            return view('pages/checkout');
+        }else{
+            return view('pages/login');
+        }
     }
+
+    public function payment(){
+        if(Session::has('user_hash')){
+            return view('pages/payment');
+        }else{
+            return view('pages/login');
+        }
+    }
+
 
     // public function productdetails($id)
     // {

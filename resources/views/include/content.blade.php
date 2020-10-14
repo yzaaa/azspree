@@ -27,6 +27,7 @@
   <?php foreach ($data['content'] as $products): ?>
   <div class="col-md-4 col-lg-4 pb-80" >
       
+    
     <div class="post-prev-img">
       <a href="/productdetails/{{$products->inmr_hash}}"><img src="{{$products->photo}}" alt="img"></a>
       {{-- <a href="/productdetails/{{$products->id}}"><img src="{{ config('global.backend_site') }}{{ $data['content']->productImage1}}" alt="img"></a> --}}
@@ -41,7 +42,7 @@
       
     <div class="shop-price-cont">
       {{-- <del>$130.00</del>&nbsp; --}}
-      <strong>&#8369; {{$products->cost_amt}}</strong>
+      <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong>
     </div>
       
   
@@ -170,7 +171,7 @@
   </div>
   
   <!-- WIDGET -->
-  <div class="widget">
+  {{-- <div class="widget">
     
     <h5 class="widget-title">LAST VIEWED ITEMS</h5>
     
@@ -214,7 +215,7 @@
     </div>
     
   </div>                
-  
+   --}}
   <!-- WIDGET -->
   <div class="widget">
                     

@@ -8,8 +8,8 @@
           <div class="logo-container-2">
   <div class="logo-2">
     <a href="/" class="clearfix">
-      {{-- <img src="images/logo.png" class="logo-img" alt="Logo"> --}}
-      <label>AZSPREE</label>
+      <img src="/brands_try/small_logo.png" class="logo-img" alt="Azspree">
+      {{-- <label>AZSPREE</label> --}}
     </a>
   </div>
 </div>
@@ -72,20 +72,23 @@
         </li> --}}
       
         <!-- MENU ITEM -->
-        <li id="menu-cart" >
+        {{-- <li id="menu-cart" >
           <a href="/mycart"><div class="main-menu-title"><span aria-hidden="true" class="icon_cart"></span>CART (0)</div></a>
-        </li>
-
-        {{-- <!-- MENU ITEM -->
-        <li id="menu-cart" >
-          <a href="/mycart"><div class="main-menu-title"><span aria-hidden="true" class="icon_cart"></span>CART (0)
-            {{Session::has('user_hash')}}</div></a>
         </li> --}}
 
         <!-- MENU ITEM -->
         <?php if(Session::has('user_hash')){ ?>
+          <li id="menu-cart">
+            <a href="/mycart"><div class="main-menu-title"><span aria-hidden="true" class="icon_cart"></span>CART ({{ session('total_qty') }})</div></a>
+          </li>
+      <?php }else{?>
+          <li id="menu-cart"><a href="/mycart"><div class="main-menu-title"><span aria-hidden="true" class="icon_cart"></span>CART (0)</div></a></li>
+      <?php }?>
+
+        <!-- MENU ITEM -->
+        <?php if(Session::has('user_hash')){ ?>
           <li class="parent">
-            <a href="/profile"><div class="main-menu-title">{{ session('fullname') }}</div></a>
+            <a ><div class="main-menu-title">{{ session('fullname') }}</div></a>
             <ul class="sub">
               <li><a href="/profile">Profile</a> </li>
               <li><a href="/logout">Logout</a> </li>

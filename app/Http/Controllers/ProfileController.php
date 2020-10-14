@@ -23,6 +23,7 @@ class ProfileController extends Controller
             $title = 'Profile';
             $data['profile'] =  User::where('is_deleted', 0)->findOrFail($user_hash);
 
+            // SHOW ALL THE ORDERS OF 1 USE
             // $data['orders'] = Orders::leftJoin('products', 'products.id', '=', 'orders.productId')
             // ->where('orders.id', $id)
             // ->orderBy('orders.id', 'desc')->get();
@@ -54,42 +55,6 @@ class ProfileController extends Controller
     //     $data['products'] = Product::where('is_deleted', 0)->findOrFail($id);
     //     return view('pages.mycart')->with('data', $data);
     // }
-
-    public function mycart()
-    {
-        Validator::make($request->all(),
-        [
-            
-            'variant_1' => 'required',
-            'variant_2' => 'required',
-            'qty' => 'required',
-
-        ]
-        
-    )->validate();
-
-    $user_hash = session('user_hash');
-
-    $addcart = new CartDetail();
-    $addcart->variant_1 = $request->input('variant_1');
-    $addcart->variant_2 = $request->input('variant_2');
-    $addcart->qty = $request->input('qty');
-    $addcart->create_datetime = Carbon::now();
-    $addcart->save();
-
-    $addcart = CartDetail::findOrFail($addcart->user_hash);
-    $addcart_hash = $addcart->user_hash;
-
-    $data = array(
-        'user_hash' => $addcart->user_hash,
-        );
-            
-    $response['stat']='success';
-    $response['msg']='<b>Successfully Added to Cart.</b>';
-    echo json_encode($response);
-
-    }
-
 
     /**
      * Show the form for creating a new resource.

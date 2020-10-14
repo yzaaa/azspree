@@ -49,14 +49,15 @@
 </div>	 --}}
 
     <!-- PAGE TITLE LARGE IMG -->
-    <div class="page-title-cont page-title-large page-title-img grey-dark-bg pt-250" style="background-image: url(HTML/images/shop-bg.jpg)">
-      <div class="relative container align-left">
+    {{-- <div class="page-title-cont page-title-large page-title-img grey-dark-bg pt-250" style="background-image: url(HTML/images/shop-bg.jpg)"> --}}
+      <div class="page-title-cont page-title-large page-title-img grey-dark-bg pt-250" style="background-image: url(brands_try/try_blue.jpg)">
+        <div class="relative container align-left">
         <div class="row">
            
           <div class="col-md-8">
-            <h1 class="page-title">SHOP</h1>
+            {{-- <h1 class="page-title">SHOP NOW</h1> --}}
             <div class="page-sub-title">
-              Lorem ipsum dolor sit amet consectetur 
+              {{-- Lorem ipsum dolor sit amet consectetur  --}}
             </div>
           </div>
            

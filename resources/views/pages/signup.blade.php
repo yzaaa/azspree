@@ -118,7 +118,7 @@
 
                                             <div class="row">
                                                 <div class="col-md-12 text-center-xxs">
-                                                    <button type="button" id="btnsign" class="button medium gray"
+                                                    <button type="button" id="btnsign" class="button medium blue"
                                                         style="width: 100%;">
                                                         <span class=""></span> <label class="btnsign_label">SIGN
                                                             UP</label>

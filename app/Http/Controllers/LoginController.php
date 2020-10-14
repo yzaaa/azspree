@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Session;
@@ -72,4 +73,19 @@ class LoginController extends Controller
         Session::forget('user_hash');
         return view('pages.login');
     }
+
+    
+    // protected function respondWithToken($token)
+    // {
+    //     $user = auth()->user();
+    //     session()->save();
+        
+    //     return response()->json([
+    //         'access_token' => $token,
+    //         'token_type' => 'bearer',
+    //         'expires_in' => 6,
+    //         'user' => $user
+    //         // 'rights' => $rights
+    //     ]);
+    // }
 }
