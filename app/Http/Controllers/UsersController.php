@@ -33,22 +33,37 @@ class UsersController extends Controller
     public function create(Request $request)
     {
 
-        Validator::make($request->all(),
+        $validator= Validator::make($request->all(),
             [
-                'fullname' => 'required',
-                'email' => 'required',
-                'contact_no' => 'required',
+                'fullname' => 'required|regex:/^[a-zA-Z\s]+$/',
+                'email' => 'required|email:rfc,dns',
+                'contact_no' => 'required|regex:/(09)[0-9]{9}$/',
                 'password' => 'required'
             ]
             
-        )->validate();
+        );
+        
+        $message = [
+            'required' => 'The :attribute field is required.',
+            'contact_no.required' => 'Contact Number must be (09XXXXXXXXX)',
+            
+        ];
 
+        if($validator->fails()){
+            $response['stat']='error';
+            // $response['msg'] =$message;
+            $response['msg']='<b>Please fill out all required field.</b> <br> <b>Contact Number must be (09XXXXXXXXX).</b>';
+            echo json_encode($response);
+        } else {
+            
         $user = new User();
         $user->fullname = $request->input('fullname');
         $user->email = $request->input('email');
         $user->contact_no = $request->input('contact_no');
-        $user->password = $request->input('password');
-        // $user->password = Hash::make($request['password']);
+        // $user->password = $request->input('password');
+        $user->password = Hash::make($request['password']);
+        $user->type = 'US';
+        $user->status = 'A';
         $user->create_datetime = Carbon::now();
         $user->save();
 
@@ -70,19 +85,7 @@ class UsersController extends Controller
         $response['stat']='success';
         $response['msg']='<b>Successfully Signup.</b> Please login now.';
         echo json_encode($response);
-    
-        
-    
-        // return ( new Reference( $addcart ))
-        //         ->response()
-        //         ->setStatusCode(201);
-
-        //return json based from the resource data
-        // return ( new Reference( $user ))
-        //         ->response()
-        //         ->setStatusCode(201);
-
-        
+        }        
 
     }
 

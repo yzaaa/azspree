@@ -22,30 +22,38 @@
 // Route::get('/home', 'HomeController@index')->name('home');
 // Route::get('/welcome', 'PagesController@index');
 Route::get('/', 'PagesController@index');
+Route::get('/search', 'PagesController@search');
+Route::post('/search', 'PagesController@search');
+Route::get('/sortbyprice', 'PagesController@sortbyprice');
 Route::get('/login', 'PagesController@login');
 Route::post('/validatelogin', 'LoginController@login');
 Route::get('/logout', 'LoginController@logout');
 
+Route::get('/get-province-list/{regn_hash}','CartController@getProvinceList');
+Route::get('/get-city-list/{prov_hash}','CartController@getCityList');
+Route::get('/get-barangay-list/{city_hash}','CartController@getBarangayList');
 
 Route::get('/trackorder', 'PagesController@trackorder');
 Route::get('/checkout', 'PagesController@checkout');
-Route::get('/payment', 'PagesController@payment');
+// Route::get('/payment', 'PagesController@payment');
 
 Route::get('/signup', 'PagesController@signup');
 Route::post('/users/create', 'UsersController@create');
 
-
-// Route::get('/productdetails/{id}', 'PagesController@productdetails');
-
-
+Route::get('/status/{id}','CartController@updateStatus');
+Route::post('/placeorder/create', 'CartController@placeorder');
 Route::get('/mycart', 'CartController@index');
 Route::get('/checkout', 'CartController@indexcheckout');
 Route::get('/delete/{id}', 'CartController@delete');
+Route::get('/updatestatus/{id}', 'ProfileController@updatestatus');
+Route::get('/review/{id}', 'ProfileController@review');
 Route::post('/cart/create', 'CartController@create');
-Route::post('/cart/update', 'CartController@updatecart');
+Route::post('/cart/createmsg', 'CartController@createmsg');
+Route::post('/cart/update', 'CartController@update');
+Route::post('/cart/updatestatus', 'CartController@updatecart');
 Route::post('/cart/updateqty', 'CartController@updateqty');
 Route::get('/productdetails/{id}', 'CartController@show');
-// Route::get('/productdetails/{id}/update', 'CartController@update');
+Route::get('/categories/{id}', 'PagesController@show');
 
 Route::get('/profile', 'ProfileController@index');
 

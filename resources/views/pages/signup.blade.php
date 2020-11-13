@@ -73,7 +73,8 @@
                                                     <label>* Full Name</label>
                                                     <input type="text" name="fullname"
                                                         data-msg-required="Please enter your Full Name" maxlength="30"
-                                                        onkeydown="return alphaOnly(event);"
+                                                        style="text-transform:uppercase"
+                                                        {{-- onkeydown="return alphaOnly(event);" --}}
                                                         class="form-control" id="fullname" required>
                                                 </div>
                                             </div>
@@ -93,7 +94,7 @@
                                                     <input type="number"
                                                         {{-- pattern="\d{4}[\-]\d{3}[\-]\d{4}" --}}
                                                         data-msg-required="Please enter your Contact Number"
-                                                        min="0" class="form-control" name="contact_no"
+                                                        class="form-control" name="contact_no"
                                                         id="contact_no" required>
                                                 </div>
                                             </div>
@@ -207,19 +208,19 @@
 
     function alphaOnly(event) {
   var key = event.keyCode;
-  return ((key >= 65 && key <= 90) || key == 8);
+  return ((key >= 65 && key <= 90));
 };
 
     var contact_no = document.getElementById('contact_no');
 
-// Listen for input event on numInput.
-contact_no.onkeydown = function(e) {
-    if(!((e.keyCode > 95 && e.keyCode < 106)
-      || (e.keyCode > 47 && e.keyCode < 58) 
-      || e.keyCode == 8)) {
-        return false;
+    // Listen for input event on numInput.
+    contact_no.onkeydown = function(e) {
+        if(!((e.keyCode > 95 && e.keyCode < 106)
+        || (e.keyCode > 47 && e.keyCode < 58) 
+        || e.keyCode == 8)) {
+            return false;
+        }
     }
-}
 
     var CreateUser = (function() {
         var _data = $('#signup-form').serializeArray();
@@ -251,11 +252,17 @@ contact_no.onkeydown = function(e) {
                     setTimeout(function() {
                         window.location.href = "/login";
                     },1000);
+                } else {
+                    $('.row-error').show();
+                    $('.error_msg').html(response.msg);
+                    // $('.error_msg').html(response.msg, response.$msg['required'], response.$msg['contact_no.required']);
+                    $('.row-error').fadeIn(400);
                 }
             })
             .always(function() {
-                $(this).toggleClass('disabled');
-                $(this).find('span').toggleClass('fa fa-spinner fa-spin');
+                $('#btnsign').toggleClass('disabled');
+                $('#btnsign').find('span').toggleClass('fa fa-spinner fa-spin');
+                $('.btnsign_label').html('Sign Up');  
             });
         }
 

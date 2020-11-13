@@ -8,7 +8,7 @@
           <div class="logo-container-2">
   <div class="logo-2">
     <a href="/" class="clearfix">
-      <img src="/brands_try/small_logo.png" class="logo-img" alt="Azspree">
+      <img src="/brands_try/azspree_logo.png" class="logo-img" alt="Azspree">
       {{-- <label>AZSPREE</label> --}}
     </a>
   </div>
@@ -38,10 +38,10 @@
         <!-- MENU ITEM -->
         <li ><a href="/"><div class="main-menu-title">HOME</div></a></li>
 
-        <!-- MENU ITEM -->
+        {{-- <!-- MENU ITEM -->
         <li>
           <a href="/welcomeseller"><div class="main-menu-title">SELL ON AZSPREE</div></a>
-        </li>					
+        </li>					 --}}
         
         {{-- <!-- MENU ITEM -->
         <li>
@@ -60,10 +60,10 @@
         </li> --}}
         
         <!-- MEGA MENU ITEM -->
-        <li>
+        {{-- <li>
           <a href="/trackorder"><div class="main-menu-title">TRACK ORDER</div></a>
           
-        </li>					
+        </li>					 --}}
         
         {{-- <!-- MENU ITEM -->
         <li id="menu-contact-info-big" class="parent megamenu">
@@ -77,26 +77,27 @@
         </li> --}}
 
         <!-- MENU ITEM -->
-        <?php if(Session::has('user_hash')){ ?>
-          <li id="menu-cart">
-            <a href="/mycart"><div class="main-menu-title"><span aria-hidden="true" class="icon_cart"></span>CART ({{ session('total_qty') }})</div></a>
+        {{-- </?php if(Session::has('user_hash')){ ?>
+          <li id="menu-cart"> --}}
+            {{-- <a href="/mycart"><div class="main-menu-title"><span aria-hidden="true" class="icon_cart"></span>CART ({{ session('total_qty') }})</div></a> --}}
+            {{-- <a href="/mycart"><div class="main-menu-title"><span aria-hidden="true" class="icon_cart"></span>CART</div></a>
           </li>
-      <?php }else{?>
+      </?php }else{?>
           <li id="menu-cart"><a href="/mycart"><div class="main-menu-title"><span aria-hidden="true" class="icon_cart"></span>CART (0)</div></a></li>
-      <?php }?>
+      </?php }?> --}}
 
         <!-- MENU ITEM -->
-        <?php if(Session::has('user_hash')){ ?>
+        {{-- </?php if(Session::has('user_hash')){ ?>
           <li class="parent">
-            <a ><div class="main-menu-title">{{ session('fullname') }}</div></a>
+            <a ><div class="main-menu-title"><span aria-hidden="true"class="fa fa-user"></span> {{ session('fullname') }}</div></a>
             <ul class="sub">
               <li><a href="/profile">Profile</a> </li>
               <li><a href="/logout">Logout</a> </li>
             </ul>
           </li>
-      <?php }else{?>
+      </?php }else{?>
           <li ><a href="/login"><div class="main-menu-title">LOGIN</div></a></li>
-      <?php }?>
+      </?php }?> --}}
       
         
                         </ul>
@@ -114,14 +115,14 @@
       <!-- END main-menu-container -->
       
       <!-- SEARCH READ DOCUMENTATION -->
-      <ul class="cd-header-buttons">
+      {{-- <ul class="cd-header-buttons">
           <li><a class="cd-search-trigger" href="#cd-search"><span></span></a></li>
       </ul> <!-- cd-header-buttons -->
       <div id="cd-search" class="cd-search">
           <form class="form-search" id="searchForm" action="page-search-results.html" method="get">
               <input type="text" value="" name="q" id="q" placeholder="Search...">
           </form>
-      </div> 
+      </div>  --}}
       
     </div>
     <!-- END header-wrapper -->

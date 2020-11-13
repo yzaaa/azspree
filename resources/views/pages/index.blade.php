@@ -28,8 +28,8 @@
                 <div class="grey-bg">
                     @include('include.topnav')
                     @yield('content')
-                    @include('include.shopinfo')
-                    @include('include.footer')
+                    {{-- @include('include.shopinfo')
+                    @include('include.footer') --}}
                 </div>
             </div>
             @include('include.tempjs')

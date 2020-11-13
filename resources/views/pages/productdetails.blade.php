@@ -49,7 +49,8 @@
                     <div class="col-md-4 col-sm-12 mb-50">
 
                         <div class="post-prev-img popup-gallery">
-                            <a href="/HTML/images/shop/items/1.jpg"><img src="/HTML/images/shop/items/1.jpg"
+                            <a style="height: 370px; width: 100px;" href="/images/products/{{$data['products']->image_path}}">
+                                <img style="height: 450px; width: 350px;" src="/images/products/{{$data['products']->image_path}}"
                                     alt="img"></a>
                         </div>
                         {{-- <div class="sale-label-cont">
@@ -58,22 +59,13 @@
 
                         <div class="row">
                             <div class="popup-gallery">
-
-                                <div class="col-xs-4 post-prev-img">
-                                    <a href="/HTML/images/shop/items/1-1.jpg"><img
-                                            src="/HTML/images/shop/items/1-1-box.jpg" alt="img"></a>
+                                {{-- yung 1 yun yung sumr_hash = seller and yung 2 naman inmr_hash = product id --}}
+                                @foreach(File::glob(public_path('images/products/'.$data['products']->sumr_hash).'/'.$data['products']->inmr_hash.'/*') as $path)
+                                <div class="col-xs-4 post-prev-img" style="height: 100px; width: 100px;">
+                                    <a href="{{ str_replace(public_path(''), '', $path) }}">
+                                        <img src="{{ str_replace(public_path(''), '', $path ) }}" alt="img"></a>
                                 </div>
-
-                                <div class="col-xs-4 post-prev-img">
-                                    <a href="/HTML/images/shop/items/1-2.jpg"><img
-                                            src="/HTML/images/shop/items/1-2-box.jpg" alt="img"></a>
-                                </div>
-
-                                <div class="col-xs-4 post-prev-img">
-                                    <a href="/HTML/images/shop/items/1-3.jpg"><img
-                                            src="/HTML/images/shop/items/1-3-box.jpg" alt="img"></a>
-                                </div>
-
+                                @endforeach
                             </div>
                         </div>
 
@@ -99,14 +91,22 @@
                                 </div>
 
                                 <div class="col-xs-6 text-right">
-                                    <span class="font-black"><i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-o"></i></span>
-                                    <small><span class="slash-divider">/</span> 21 <span
-                                            class="display-none-767">reviews</span>
-                                    </small>
+                                    <label>
+                                        21 <span
+                                        class="display-none-767">Sold</span>
+                                        <span class="slash-divider">/</span> 
+                                    </label>
+                                    <label style="color:rgb(72, 99, 160);"> 4.8&nbsp;
+                                        <span >
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                          </span></label>
+                                    <label><span class="slash-divider">/</span><a href="/"> 21 </a><span
+                                            class="display-none-767">Reviews</span>
+                                    </label>
                                 </div>
 
                             </div>
@@ -114,8 +114,14 @@
                             <div class="font-14 lh-20 mb-30">
                                 <div>Brand: <label style="color:black; bold">{{ $data['products']->product_details }}</label></div>
                                 <div>Category: <label style="color:black">{{ $data['products']->cat_name }}</label>
-                                    <span class="slash-divider">></span> <label style="color:black">
-                                        {{ $data['products']->subcat_name }}</label></div>
+                                    <span class="slash-divider">></span> <label style="color:black">{{ $data['products']->subcat_name }}</label>
+                                </div>
+                                <?php if ($data['products']->available_qty <= '0'){ ?> 
+                                    <div>Out of Stocks.</div> 
+                                <?php }else{ ?> 
+                                    <div>Available: <label style="color:black">{{$data['products']->available_qty}}</label></div>
+                                <?php }?>
+                                
                                 {{-- <div>Tags: <a class="a-dark" href="#">WOMEN'S
                                         SHOES</a>, <a class="a-dark" href="#">blue shirt</a>,
                                     <a class="a-dark" href="#">men</a></div>
@@ -132,7 +138,7 @@
                             <hr class="mt-0 mb-30">
 
                             <div class="row">
-                                <div class="col-sm-6 mb-30">
+                                {{-- <div class="col-sm-6 mb-30">
                                         <select class="select-md input-border w-100" name="variant_1" data-msg-required="Please enter Size" required>
                                             <option>Select size</option>
                                             <option>XXL</option>
@@ -150,7 +156,7 @@
                                             <option>Blue</option>
                                             <option>White</option>
                                         </select>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <hr class="mt-0 mb-30">
@@ -161,23 +167,19 @@
                                     --}}
                             
                                         <div class="col-xs-4 col-sm-2 col-md-2 ">
-                                            {{-- <input type="number" data-msg-required="Please enter Quantity"
-                                             min="1" max="100" class="input-border" name="qty" id="qty" required> --}}
                                              <input type="number" pattern=" 0+\.[0-9]*[1-9][0-9]*$" 
+                                             <?php if ($data['products']->available_qty == '0'){ ?> disabled <?php   } ?>
                                              onkeypress="return event.charCode >= 48 && event.charCode <= 57" data-msg-required="Please enter Quantity"
                                              min="1" max="100" class="input-border" name="qty" id="qty" value="1" required>
                                         </div>
                                         <div class="col-xs-8 col-sm-10 col-md-6">
                                             <div class="post-prev-more-cont clearfix">
                                                 <div class="shop-add-btn-cont">
-                                                    <button type="button" id="btnadd" data-user-id="<?php echo session('user_hash'); ?>" class="button medium blue"
-                                                        style="width: 100%;">
+                                                    <button type="button" id="btnadd" data-user-id="<?php echo session('user_hash'); ?>" 
+                                                        <?php if ($data['products']->available_qty == '0'){ ?> disabled <?php   } ?> 
+                                                        class="btn btn-lg btn-primary" style="width: 100%;">
                                                         <span class=""></span> <label class="btnadd_label">ADD TO CART</label>
                                                     </button>
-                                                    {{-- <a
-                                                        class="button medium gray shop-add-btn"
-                                                        href="/mycart/{{ $data['products']->inmr_hash }}">ADD TO
-                                                        CART</a> --}}
                                                 </div>
                                                 {{-- <div class="shop-sub-btn-cont">
                                                     <a href="#" class="post-prev-count"><span aria-hidden="true"
@@ -196,6 +198,190 @@
             </div>
 
             <hr class="mt-0 mb-80">
+
+            <div class="container mb-100">
+                <h5 class="widget-title label label-primary" style="color: white">Product Reviews</h5>&nbsp;<br><br>
+            <table class="table">
+                <?php 
+                if(count($data['order']) > 0){
+                  foreach ($data['order'] as $review): 
+                 ?>
+            <tbody>
+                <tr >
+                    <td colspan="5">  
+                      <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row" >
+                                <div class="col-md-6">
+                                  <b>{{$review->fullname}}</b><br>
+                                  <span>Product: </span><span>{{$review->product_name}}</span>
+                                </div>
+                                <div class="col-md-6">
+                                  <span style="color:rgb(72, 99, 160); float: right; font-size:20px">
+                                    <?php 
+                                    if ($review->rating == '1') {
+                                    ?>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <?php }?>
+                                    <?php 
+                                    if ($review->rating == '2') {
+                                    ?>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <?php }?>
+                                    <?php 
+                                    if ( $review->rating == '3') {
+                                    ?>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <?php }?>
+                                    <?php 
+                                    if ($review->rating == '4') {
+                                    ?>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <?php }?>
+                                    <?php 
+                                    if ($review->rating == '5') {
+                                    ?>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <?php }?>
+                                    
+                                  </span><br>
+                                </div>
+                            </div>
+                            <br><hr class="mt-0 mb-10">
+                            <div class="row">
+                              <div class="col-md-12" style="color:black;">
+                                  {{$review->remarks}}
+                              </div>
+                          </div>
+                      </div>
+                    </div>    
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                <?php }else{ ?>
+                  <tr>
+                    <td colspan="5">
+                      <center>No Reviews Yet</center>
+                      <br>
+                    </td>
+                  </tr>
+              </tbody>
+              <?php }?>
+            </table>
+            </div>
+
+            <div class="container mb-100">
+                <div>
+                        <div class="mb-30">
+                            <h5 class="widget-title label label-primary" style="color: white">question(s)</h5>	
+                          <ul class="media-list text comment-list">
+                            <li>
+                                <div class="contact-form-container">
+
+                                    {{-- <form id="contact-form" action="#" method="POST"> --}}
+                                    <form id="msg-form" autocomplete="off">
+                                      <div class="row">
+                                        <input type="hidden" name="inmr_hash" id="inmr_hash" value="{{ $data['products']->inmr_hash }}" />
+                                      </div>
+                                      
+                                      <div class="row">
+                                        <div>
+                                          <div class="col-md-12 mb-40">
+                                            <!-- <label>Message *</label> -->
+                                            <textarea maxlength="5000" data-msg-required="Please enter your message" rows="3" class="controled" name="comment" id="comment" placeholder="ENTER YOUR QUESTION(S) HERE" required=""></textarea>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-12">
+                                          <input type="submit" id="btnmsg" value="SEND MESSAGE" data-user-id="<?php echo session('user_hash'); ?>"  class="button medium blue" >
+                                        </div>
+                                      </div>
+                                    </form>	
+
+                                    <div class="alert alert-success hidden animated fadeIn" id="contactSuccess" >
+                                      <strong>Success!</strong> Your message has been sent to us.
+                                    </div>
+          
+                                    <div class="alert alert-danger hidden animated shake" id="contactError">
+                                      <strong>Error!</strong> There was an error sending your message.
+                                    </div>
+                                  </div>
+                            </li>
+
+                            <?php 
+                            if(count($data['comment']) > 0){
+                            foreach ($data['comment'] as $com): 
+                            ?>
+                            <!-- Comment Item -->
+                            <li class="media comment-item">
+                                <span style="text-align: center" class="label label-primary pull-left"><i class="icon_question_alt2"></i> QUESTION</span>&nbsp;
+                                <div class="media-body">
+                                                    
+                                <div class="comment-item-title">
+                                  <div class="comment-author">
+                                   {{$com->fullname}}
+                                    <span class="slash-divider">-</span><span class="comment-date" >{{$com->created_datetime}}</span>
+                                  </div>
+                                  <p class="pb-30">{{$com->comment}}</p>
+                                </div>
+                              </div>
+                              <?php if($com->answer_status == '1'){ ?> 
+                              <span style="text-align: center" class="label label-success pull-left"><i class="icon_check_alt2"></i>ANSWER</span>&nbsp;
+                                <div class="media-body">
+                                                    
+                                <div class="comment-item-title">
+                                  <div class="comment-author">
+                                    {{$com->seller_name}}
+                                    <span class="slash-divider">-</span><span class="comment-date" >{{$com->updated_datetime}}</span>
+                                  </div>
+                                  <p class="pb-30">{{$com->answer}}</p>
+                                </div>
+                              </div>
+                              <?php }?> 
+                            </li>
+                            <!-- End Comment Item -->
+                            <?php endforeach; ?>
+                            <?php }else{ ?>
+                            <li><center>No Comment Yet</center></li>
+                            <?php }?>
+                          </ul>
+                        </div>
+                        <!-- End Add Review -->
+                              
+                      </div>
+
+                    <!-- PAGINATION -->
+                    <div class="mt-0">
+                        <nav>
+                        {{ $data['comment']->links() }}
+                        </nav> 
+                    </div>
+                </div>
+                <!-- END tabs  -->
+  
+              </div>
+            </div>
 
         </div>
     </div>
@@ -269,25 +455,74 @@
             if (validateRequiredFields($('#add-form'))) {
             $(this).toggleClass('disabled');
             $(this).find('span').toggleClass('fa fa-spinner fa-spin');
-            $('.btnadd_label').html('ADDING TO CART');
+            $('.btnadd_label').html('ADDING TO CART');  
 
 
             AddCart().done(function(response) {
 
                 if (response.stat == "success") {
                     $('.div_success').show();
-                    $('.div_sign_up').hide();
                     $('.success_msg').html(response.msg);
                     $('.row-success').fadeIn(400);
                     setTimeout(function() {
                         window.location.href = "/";
                     },1000);
-                } 
+                } else {
+                    $('.row-error').show();
+                    $('.error_msg').html(response.msg);
+                    $('.row-error').fadeIn(400);
+                }
             })
             .always(function() {
-                $(this).toggleClass('disabled');
-                $(this).find('span').toggleClass('fa fa-spinner fa-spin');
+                $('#btnadd').toggleClass('disabled');
+                $('#btnadd').find('span').toggleClass('fa fa-spinner fa-spin');
+                $('.btnadd_label').html('ADD TO CART');  
             });
+            }
+        }
+
+    });
+
+
+    var AddMsg = (function() {
+        var _data = $('#msg-form').serializeArray();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        return $.ajax({
+            "dataType": "json",
+            "type": "POST",
+            "url": "{{ url('/cart/createmsg') }}",
+            "data": _data
+        });
+    });
+
+    $('#btnmsg').click(function() {
+        
+        var user_hash = $(this).attr("data-user-id");
+
+        if(user_hash == "" || null){
+            window.location.href = "/login";
+        }else{
+            if (validateRequiredFields($('#msg-form'))) {
+
+            AddMsg().done(function(response) {
+
+                if (response.stat == "success") {
+                    $('.div_success').show();
+                    $('.success_msg').html(response.msg);
+                    $('.row-success').fadeIn(400);
+                    setTimeout(function() {
+                        window.location.href = "/";
+                    },1000);
+                } else {
+                    $('.row-error').show();
+                    $('.error_msg').html(response.msg);
+                    $('.row-error').fadeIn(400);
+                }
+            })
             }
         }
 

@@ -14,14 +14,11 @@ class PagesController extends Controller
 {
     public function index()
     {
-        $title = 'Online Shopping';
-        //for sidebar
-        $data['categories'] =  DB::table('inct')->where('is_deleted', 0)->get();
-        $data['content'] =  DB::table('inmr')->where('is_deleted', 0)->orderBy('inmr_hash')->paginate(12);
-        // $data['sub'] = DB::table('subcategory')->leftJoin('category', 'category.categoryid')
-        // ->where('subcategory.is_deleted', 0)->orderBy('subcategory.subcat_id')->take(3);
-        // $data['productdetails'] =  DB::table('inmr')->where('is_deleted', 0)->get();
-        return view ('welcome')->with('data', $data);
+        $title = 'Azspree';
+        $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
+        $content =  DB::table('inmr')->where('is_deleted', 0)->orderBy('inmr_hash')->paginate(12);
+        
+        return view('welcome', compact('categories','content'));
     }
     public function login(){
         if(Session::has('user_hash')){
@@ -68,19 +65,24 @@ class PagesController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $data['content'] =  DB::table('inmr')
+        ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        ->where('inmr.is_deleted', 0)
+        ->where('inmr.inct_hash', $id)
+        ->paginate(12);
 
-    // public function productdetails($id)
-    // {
-    //     // $data['productdetails'] =  DB::table('inmr')->where('is_deleted', 0)->findOrFail($id);
-    //     // $data['products'] = Product::where('is_deleted', 0)->findOrFail($id);
-    //     // return view('pages.productdetails')->with('data', $data);
+        $data['cat'] =  DB::table('inct')
+        ->where('is_deleted', 0)
+        ->where('inct_hash', $id)
+        ->groupBy('cat_name')
+        ->get();
+    
+        $data['categories'] =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
 
-    //     $data['products'] = Product::leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
-    //     ->leftJoin('insc', 'insc.insc_hash', '=', 'inmr.insc_hash')
-    //     ->findOrFail($id);
-    //     return view('pages.productdetails')->with('data', $data);
-
-    // }
+        return view('pages.categories')->with('data', $data);
+    }
 
     public function mycart()
     {
@@ -88,10 +90,35 @@ class PagesController extends Controller
         return view('pages.mycart')->with('data', $data);
     }
 
-    //  public function mycart()
-    // {
-    //     return view ('pages.mycart');
-    // }
+    public function search(Request $request)
+    {
+
+        $search = $request->product_details;
+
+        $categories =  DB::table('inct')->where('is_deleted', 0)->get();
+
+        $content=  DB::table('inmr')
+        ->where('inmr.is_deleted', 0)
+        ->where('product_details','like',"%".$search."%")
+        ->paginate(12);
+
+        return view ('welcome',compact('categories','content'));
+    }
+
+    public function sortbyprice(Request $request)
+    {
+        $sortbyprice = $request->sortbyprice;
+
+        $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','desc')->get();
+
+         if ($sortbyprice == 'asc'){
+            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->orderBy('cost_amt','asc')->paginate(12);
+            } else {
+            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->orderBy('cost_amt','desc')->paginate(12);
+            }
+
+        return view ('welcome',compact('categories','content'));
+    }
 
     public function profile()
     {
@@ -102,24 +129,5 @@ class PagesController extends Controller
     {
         return view ('pages.welcomeseller');
     }
-
-
-    // public function content(){
-    //     $data['content'] = Product::where('is_deleted', 0)->get();
-    //     return view('content')->with('data', $data);
-    // }
-    
-    // //for sidebar
-    // public function sidebar($id){
-    //     $data['categories'] = Category::where('id', null)->get();
-    //     return view('categories')->with('data', $data);
-    // }
-
-    // public function seminar($id){
-    //     $data['seminar'] = Seminar::leftJoin('cms_gallery', 'cms_gallery.gallery_id', '=', 'cms_seminars.gallery_id')->findOrFail($id);  
-    //     $data['other_seminars'] =  DB::table('cms_seminars')->where('cms_seminars.is_deleted', 0)->orderBy('seminar_date', 'desc')->take(3)->get();
-    //     return view('seminar')->with('data', $data);
-    // }
-
 
 }

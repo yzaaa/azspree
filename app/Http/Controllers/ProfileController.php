@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Orders;
+use App\Models\OrderHeader;
+use App\Models\OrderDetail;
 use App\Models\Product;
 use Session;
 use DB;
@@ -23,10 +24,24 @@ class ProfileController extends Controller
             $title = 'Profile';
             $data['profile'] =  User::where('is_deleted', 0)->findOrFail($user_hash);
 
-            // SHOW ALL THE ORDERS OF 1 USE
-            // $data['orders'] = Orders::leftJoin('products', 'products.id', '=', 'orders.productId')
-            // ->where('orders.id', $id)
-            // ->orderBy('orders.id', 'desc')->get();
+            // SHOW ALL THE ORDERS OF 1 USER
+            // $data['order'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
+            // ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
+            // ->where('sohr.user_hash', $user_hash)
+            // ->get(); 
+
+            $data['order_no'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
+            ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
+            ->where('sohr.user_hash', $user_hash)
+            ->groupBy('sohr.order_no')
+            ->orderBy('sohr.sohr_hash', 'desc')
+            ->get(); 
+
+            $data['order'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')
+            ->leftJoin('sohr', 'sohr.sohr_hash', '=', 'soln.sohr_hash')
+            ->where('sohr.user_hash', $user_hash)
+            ->orderBy('sohr.sohr_hash', 'desc')
+            ->get(); 
 
 
         return view('pages.profile')->with('data', $data);
@@ -35,26 +50,31 @@ class ProfileController extends Controller
         }
     }
 
-    // public function cart($id)
-    // {
-    //     if(Session::has('user_hash')){
-    //         $user_hash = session('user_hash');
-    //         $title = 'MyCart';
-    //         $data['mycart'] =  DB::table('user')->where('is_deleted', 0)->orderBy('user_hash')->get();
+    public function updatestatus($id)
+    {       
+            
+            $order = OrderHeader::findOrFail($id);
+            $order->status = 'COMPLETED';
+            $order->save();
+            return redirect('/profile');
+    }   
+    
+    public function review(Request $request, $id)
+    {       
+            
+            $order = OrderDetail::findOrFail($id);
+            $order->rating = $request->rating;
+            $order->remarks = $request->remarks;
+            $order->status_ratings = 1;
+            $order->inmr_hash = $request['inmr_hash'];
+            $order->save();
 
-    //         $data['products'] = Product::where('is_deleted', 0)->findOrFail($user_hash);
+             DB::table('inmr')->where('inmr_hash', $order->inmr_hash)->increment('total_ratings', $order->rating);    
+             Product::where('inmr_hash', $order->inmr_hash)->update(['number_ratings' => DB::raw('number_ratings + 1')]);
 
-    //     return view('pages.mycart')->with('data', $data);
-    // }else{
-    //     return view('pages.login');
-    //     }
-    // }
+            return redirect('/profile');
+    }   
 
-    // public function mycart($id)
-    // {
-    //     $data['products'] = Product::where('is_deleted', 0)->findOrFail($id);
-    //     return view('pages.mycart')->with('data', $data);
-    // }
 
     /**
      * Show the form for creating a new resource.

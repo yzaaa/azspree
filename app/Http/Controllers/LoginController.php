@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Session;
+use Hash;
 use DB;
 
 class LoginController extends Controller
@@ -42,15 +43,27 @@ class LoginController extends Controller
                 'password' => 'required'
             ]
         )->validate();
-
+        
         $email = $request->input('email');
         $password = $request->input('password');
+        
 
+        // $email = request(['email']);
+        // $password = request(['password']);
+        // $password = Hash::make($request->get('password'));
+        // $password = Hash::make($request['password']);
+       
+        
+        
         $result = User::select('*')
                     ->where('email', $email)
                     ->where('password', $password)
+                    ->where('type', 'US')
+                    ->where('status', 'A')
                     ->get();
         
+
+        // Hash::check($request->input('password'), $result->$password)
         if(count($result) > 0){
 
             session()->put('user_hash', $result[0]->user_hash);

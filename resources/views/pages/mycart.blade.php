@@ -89,9 +89,8 @@
                           <td class="text-center">
                           <input name="is_selected"  type="checkbox" data-srln-hash="{{ $addcart->srln_hash }}" value={{ $unit_total }} class="items" {{ ($addcart->is_selected == 1 ? ' checked' : '') }}>
                           </td>
-                          <td><a href="/productdetails/{{$addcart->inmr_hash}}"><img src="/HTML/images/shop/recent/1.jpg" alt="img"></a></td>
-                          <td><a href="/productdetails/{{$addcart->inmr_hash}}" >{{ $addcart->product_name }}</a>
-                            <input type="hidden" name="inmr_hash" value="{{ $addcart->inmr_hash }}" /></td>
+                          <td><a href="/productdetails/{{$addcart->inmr_hash}}"><img style="height: 60px; width: 45px;" src="/images/products/{{$addcart->image_path}}" alt="img"></a></td>
+                          <td><a href="/productdetails/{{$addcart->inmr_hash}}" >{{ $addcart->product_name }}</a></td>
                           <td>{{ number_format($addcart->unit_price, 2) }}</td>
                           <td>
                           <input type="number" id="line_qty_{{ $addcart->srln_hash }}" data-orig-price="{{ $addcart->unit_price }}" data-srln-hash="{{ $addcart->srln_hash }}"  class="input-border white-bg qty" style="width: 70px; " min="1" max="100" value={{ $addcart->qty }}>
@@ -158,6 +157,7 @@
 @stop
 
 @section('embeddedjs')
+<script src="/formatter/accounting.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
   var computeItems;
@@ -181,7 +181,7 @@ $(document).ready(function () {
             return $.ajax({
                 "dataType": "json",
                 "type": "POST",
-                "url": "{{ url('/cart/update') }}",
+                "url": "{{ url('/cart/updatestatus') }}",
                 "data": _data
             });
         });
@@ -210,7 +210,7 @@ $(document).ready(function () {
 
           });
 
-          $('#subtotal').text(parseFloat(subtotal));
+          $('#subtotal').text(accounting.formatNumber(subtotal,2));
       };
       computeItems();
     }();

@@ -12,9 +12,9 @@
             <div id="wrap" class="boxed ">
                 <div class="grey-bg">
 
-                    @include('include.content')
+                    {{-- @include('include.content')
                     @include('include.sidebar')
-                    @include('include.brands')
+                    @include('include.brands') --}}
                     
                     
                 </div>

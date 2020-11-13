@@ -6,22 +6,22 @@
       <div class="col-md-4 col-sm-6 widget">
         <div class="logo-footer-cont">
           <a href="/">
-            <img src="/brands_try/small_logo.png" class="logo-img" alt="Azspree">
+            <img src="/brands_try/azspree_logo.png" class="logo-img" alt="Azspree">
             {{-- <label>AZSPREE</label> --}}
           </a>
         </div>
         <div class="footer-2-text-cont">
           <address>
-           San Fernando, Pampanga<br>
-            Philippines
+           {{-- San Fernando, Pampanga<br>
+            Philippines --}}
           </address>
         </div>
         <div class="footer-2-text-cont">
-          1-800-312-2121<br>
-          1-800-310-1010
+          {{-- 1-800-312-2121<br>
+          1-800-310-1010 --}}
         </div>
         <div class="footer-2-text-cont">
-          <a class="a-text" href="mailto:info@haswell.com">gbsc@gmail.com</a>
+          {{-- <a class="a-text" href="mailto:info@haswell.com">gbsc@gmail.com</a> --}}
         </div>
       </div>
       

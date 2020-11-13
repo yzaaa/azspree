@@ -26,6 +26,10 @@
 		<script src="/HTML/js/main.js"></script>
 		
 		<!-- REVOSLIDER SCRIPTS  -->
-			<!-- SLIDER REVOLUTION 4.x SCRIPTS  -->
-			<script type="text/javascript" src="/HTML/rs-plugin/js/jquery.themepunch.tools.min.js"></script>   
-			<script type="text/javascript" src="/HTML/rs-plugin/js/jquery.themepunch.revolution-parallax.min.js"></script>
+		<!-- SLIDER REVOLUTION 4.x SCRIPTS  -->
+		<script type="text/javascript" src="/HTML/rs-plugin/js/jquery.themepunch.tools.min.js"></script>   
+    <script type="text/javascript" src="/HTML/rs-plugin/js/jquery.themepunch.revolution-parallax.min.js"></script>
+      
+    <!-- FLEX SLIDER SCRIPTS  -->
+		<script src="/HTML/js/jquery.flexslider-min.js"></script> 
+		<script src="/HTML/js/flex-slider.js"></script> 
