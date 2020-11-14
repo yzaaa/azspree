@@ -38,11 +38,11 @@
         <!-- MENU ITEM -->
         <li ><a href="/"><div class="main-menu-title">HOME</div></a></li>
 
-        {{-- <!-- MENU ITEM -->
-        <li>
+        <!-- MENU ITEM -->
+        {{-- <li>
           <a href="/welcomeseller"><div class="main-menu-title">SELL ON AZSPREE</div></a>
-        </li>					 --}}
-        
+        </li>					
+         --}}
         {{-- <!-- MENU ITEM -->
         <li>
           <a href="#"><div class="main-menu-title">MY CART</div></a>

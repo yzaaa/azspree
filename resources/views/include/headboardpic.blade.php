@@ -34,8 +34,8 @@
             <ul class="slides">
             
               <!-- SLIDE 1 -->
-              <li style="background: url(/brands_try/real.jpg) no-repeat;background-position:50% 0">
-              
+              {{-- <li style="background: url(/brands_try/real.jpg) no-repeat;background-position:50% 0"> --}}
+              <li style="background: url(/brands_try/real.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
                 <div class="container">
                   <div class="contain">
                     {{-- <h2 data-toptitle="35%" class="light-100 flex-top-bot">AZSPREE</h2>
