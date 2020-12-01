@@ -16,7 +16,7 @@ class PagesController extends Controller
     {
         $title = 'Azspree';
         $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
-        $content =  DB::table('inmr')->where('is_deleted', 0)->orderBy('inmr_hash')->paginate(12);
+        $content =  DB::table('inmr')->where('is_deleted', 0)->where('is_verified', 1)->orderBy('inmr_hash')->paginate(18);
         
         return view('welcome', compact('categories','content'));
     }
@@ -27,6 +27,7 @@ class PagesController extends Controller
             return view('pages/login');
         }
     }
+    
 
     public function success(){
         if(Session::has('user_hash')){
@@ -65,29 +66,17 @@ class PagesController extends Controller
         }
     }
 
-    public function show($id)
-    {
-        $data['content'] =  DB::table('inmr')
-        ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
-        ->where('inmr.is_deleted', 0)
-        ->where('inmr.inct_hash', $id)
-        ->paginate(12);
-
-        $data['cat'] =  DB::table('inct')
-        ->where('is_deleted', 0)
-        ->where('inct_hash', $id)
-        ->groupBy('cat_name')
-        ->get();
     
-        $data['categories'] =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
-
-        return view('pages.categories')->with('data', $data);
-    }
 
     public function mycart()
     {
         $data['products'] = Product::where('is_deleted', 0)->get();
         return view('pages.mycart')->with('data', $data);
+    }
+
+    public function verify()
+    {
+        return view('pages.verify');
     }
 
     public function search(Request $request)
@@ -99,8 +88,9 @@ class PagesController extends Controller
 
         $content=  DB::table('inmr')
         ->where('inmr.is_deleted', 0)
+        ->where('is_verified', 1)
         ->where('product_details','like',"%".$search."%")
-        ->paginate(12);
+        ->paginate(18);
 
         return view ('welcome',compact('categories','content'));
     }
@@ -109,20 +99,68 @@ class PagesController extends Controller
     {
         $sortbyprice = $request->sortbyprice;
 
-        $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','desc')->get();
+        $categories =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
 
          if ($sortbyprice == 'asc'){
-            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->orderBy('cost_amt','asc')->paginate(12);
+            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->orderBy('cost_amt','asc')->paginate(18);
             } else {
-            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->orderBy('cost_amt','desc')->paginate(12);
+            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->orderBy('cost_amt','desc')->paginate(18);
             }
 
         return view ('welcome',compact('categories','content'));
     }
 
+    public function sortbypricebycat(Request $request)
+    {
+        $sortbypricebycat = $request->sortbypricebycat;
+        $id = $request->srln_hash;
+
+        $cat =  DB::table('inct')
+        ->where('is_deleted', 0)
+        ->where('inct_hash', $id)
+        ->groupBy('cat_name')
+        ->get();
+
+        $category =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
+
+         if ($sortbypricebycat == 'asc'){
+            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->orderBy('cost_amt','asc')->paginate(18);
+            } else {
+            $content = DB::table('inmr')->where('inmr.is_deleted', 0)->where('is_verified', 1)->orderBy('cost_amt','desc')->paginate(18);
+            }
+
+       return view ('pages.categories',compact('category','content','cat'));
+    }
+    public function show($id)
+    {
+        $content =  DB::table('inmr')
+        ->leftJoin('inct', 'inct.inct_hash', '=', 'inmr.inct_hash')
+        ->where('inmr.is_deleted', 0)
+        ->where('is_verified', 1)
+        ->where('inmr.inct_hash', $id)
+        ->paginate(18);
+
+        $cat =  DB::table('inct')
+        ->where('is_deleted', 0)
+        ->where('is_verified', 1)
+        ->where('inct_hash', $id)
+        ->groupBy('cat_name')
+        ->get();
+    
+        $category =  DB::table('inct')->where('is_deleted', 0)->orderBy('cat_name','asc')->get();
+
+        return view ('pages.categories',compact('category','content','cat'));
+    }
+  
+
     public function profile()
     {
         return view ('pages.profile');
+    }
+
+    public function waybill()
+    {
+        return view ('pages.waybill');
     }
 
     public function welcomeseller()

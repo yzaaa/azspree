@@ -21,10 +21,13 @@
 
 // Route::get('/home', 'HomeController@index')->name('home');
 // Route::get('/welcome', 'PagesController@index');
+Route::get('auth/google', 'LoginController@redirectToGoogle');
+Route::get('auth/google/callback', 'LoginController@handleGoogleCallback');
 Route::get('/', 'PagesController@index');
 Route::get('/search', 'PagesController@search');
 Route::post('/search', 'PagesController@search');
 Route::get('/sortbyprice', 'PagesController@sortbyprice');
+Route::get('/sortbypricebycat', 'PagesController@sortbypricebycat');
 Route::get('/login', 'PagesController@login');
 Route::post('/validatelogin', 'LoginController@login');
 Route::get('/logout', 'LoginController@logout');
@@ -56,12 +59,15 @@ Route::get('/productdetails/{id}', 'CartController@show');
 Route::get('/categories/{id}', 'PagesController@show');
 
 Route::get('/profile', 'ProfileController@index');
-
+Route::get('/verify/{id}', 'UsersController@verify');
+Route::get('/verify', 'PagesController@verify');
+Route::post('/updateverification', 'LoginController@updateverification');
 
 // Route::get('/mycart', 'PagesController@mycart');
 // Route::get('/mycart/{id}', 'ProfileController@cart');
 // Route::get('/mycart', 'ProfileController@cart');
-
+Route::get('/sort', 'ProfileController@sort');
+Route::get('/waybill', 'ProfileController@waybill');
 
 Route::get('/welcomeseller', 'PagesController@welcomeseller');
 

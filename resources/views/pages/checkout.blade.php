@@ -45,7 +45,7 @@
 
                     <div class="mb-20">
                       <select class="controled region" name="region" id="region" data-msg-required="PLEASE SELECT REGION" required>
-                        <option selected disabled="disabled" selected="selected" value="default">SELECT REGION</option>
+                        <option selected disabled="disabled" selected="selected" value="0" class="default">SELECT REGION</option>
                         <?php foreach ($data['tbl_region'] as $region): ?>
                         <option value="{{$region->regn_hash}}">{{$region->region}}</option>
                         <?php endforeach; ?> 
@@ -53,24 +53,31 @@
                     </div>
 
                     <div class="mb-20">
-                      <select class="controled" name="province" id="province"  data-msg-required="PLEASE SELECT PROVINCE" required>
-                        <option selected disabled="disabled" selected="selected" value="default">SELECT PROVINCE</option>
-                        <option value=""></option>
+                      <select class="controled location" name="province" id="province"  data-msg-required="PLEASE SELECT PROVINCE" required>
+                        <option selected disabled="disabled" selected="selected" value="0" class="default">SELECT PROVINCE</option>
+                        <?php foreach ($data['tbl_province'] as $province): ?>
+                        <option value="{{$province->prov_hash}}" data-region="{{$province->regn_hash}}">{{$province->province}}</option>
+                        <?php endforeach; ?> 
                       </select>
                     </div>
 
                     <div class="row">
                       <div class="col-sm-6 mb-20">
-                        <select class="controled city" name="city" id="city" data-msg-required="PLEASE SELECT CITY" required>
-                          <option selected disabled="disabled" selected="selected" value="default">SELECT CITY</option>
-                          <option value=""></option>
-                        </select>
+                        <select class="controled location" name="city" id="city" data-msg-required="PLEASE SELECT CITY" required>
+                          <option selected disabled="disabled" selected="selected" value="0" class="default">SELECT CITY</option>
+                          <?php foreach ($data['tbl_city'] as $city): ?>
+                          <option value="{{$city->city_hash}}" data-province="{{$city->prov_hash}}">{{$city->city}}</option>
+                          {{-- <input type="text" value="{{ $city->sumr_hash }}" name="sumr_hash" /> --}}
+                          <?php endforeach; ?> 
+                          </select>
                       </div>
 
                       <div class="col-sm-6 mb-20">
-                        <select class="controled barangay" name="barangay" id="barangay" data-msg-required="PLEASE SELECT BARANGAY" required>
-                          <option selected  disabled="disabled" selected="selected" value="default">SELECT BARANGAY</option>
-                          <option value=""></option>
+                        <select class="controled location" name="barangay" id="barangay" data-msg-required="PLEASE SELECT BARANGAY" required>
+                          <option selected  disabled="disabled" selected="selected" value="0" class="default">SELECT BARANGAY</option>
+                          <?php foreach ($data['tbl_brgy'] as $brgy): ?>
+                          <option value="{{$brgy->brgy_hash}}" data-city="{{$brgy->city_hash}}">{{$brgy->barangay}}</option>
+                          <?php endforeach; ?> 
                         </select>
                       </div>
                     </div>
@@ -129,8 +136,14 @@
                         $unit_total = 0; 
                         $order_subtotal = 0; 
                         $total_qty = 0; 
-                        $shipping = 0; 
+                        $shipping_fee = 0; 
                         $order_total = 0; 
+                        $shipping_extra = 0;
+                        $shipping_city = 0; 
+                        $dimension = 0;
+                        $weight = 0;
+                        $total_kg = 0;
+                        $max_kg = 5;
 
                       ?>
                           <?php 
@@ -139,9 +152,43 @@
                             {
                             $unit_total =$addcart->unit_price * $addcart->qty; 
                             $order_subtotal += $unit_total;
-                            $shipping = 55;
-                            $order_total = $order_subtotal+$shipping; 
                             $total_qty += $addcart->qty;
+
+                            $shipping_city= $shipping_fee;
+                            $dimension = $addcart->dimension;
+                            $weight = $addcart->weight;
+
+                            if ($dimension > $weight){
+                                if ($dimension > $max_kg){
+                                    $sub_1= ($dimension - $max_kg);
+                                    $sub_2 = ($sub_1 * $max_kg );
+                                    $total_kg = ($sub_2 * $addcart->qty );
+                                }else{
+                                    $total_kg = $dimension;
+
+                                }
+                            }else if($dimension = $weight){
+                                if ($weight > $max_kg){
+                                    $sub_1= ($weight - $max_kg);
+                                    $sub_2 = ($sub_1 * $max_kg );
+                                    $total_kg = ($sub_2 * $addcart->qty );
+                                }else{
+                                    $total_kg = $weight;
+
+                                }
+                            }else{
+                                if ($weight > $max_kg){
+                                    $sub_1= ($weight - $max_kg);
+                                    $sub_2 = ($sub_1 * $max_kg);
+                                    $total_kg = ($sub_2 * $addcart->qty );
+                                }else{
+                                    $total_kg = $weight;
+
+                                }
+                            }
+                            $shipping_extra += $total_kg;
+                            $shipping = $shipping_extra + $shipping_city;
+                            $order_total = $order_subtotal+$shipping; 
                           ?>
 
                                   <div class="row">
@@ -154,8 +201,12 @@
                                       <div class="col-md-8">  
                                       {{ $addcart->product_name }}<br>
                                       {{ $addcart->qty }} x {{ number_format($addcart->unit_price, 2) }}
+                                      <input type="hidden" value="{{ $addcart->dimension }}" name="dimension[]" id="items" />
+                                      <input type="hidden" value="{{ $addcart->weight }}" name="weight[]" id="items" />
                                       <input type="hidden" value="{{ $addcart->qty }}" name="qty[]" id="items" />
                                       <input type="hidden" value="{{ $addcart->unit_price }}" name="unit_price[]" id="items"/>
+                                      
+
                                       </div>
                                       <div class="col-md-2">  
                                         {{ number_format($unit_total, 2) }}
@@ -171,13 +222,15 @@
                     endforeach; ?> {{-- END OF CART --}}
                                 <div class="row">
                                   <div class="col-md-6" style="float: right">  
-                                    <input type="hidden" value="{{ $total_qty }}" name="total_qty" >
+                                    {{-- <input type="hidden" value="{{ $total_qty }}" name="total_qty" >
                                     <input type="hidden" value="{{ $order_subtotal }}" name="order_subtotal" >
                                     <input type="hidden" value="{{ $shipping }}" name="shipping" >
-                                    <input type="hidden" value="{{ $order_total }}" name="order_total" >
+                                    <input type="hidden" value="{{ $order_total }}" name="order_total" > --}}
                                     
                                     <input type="hidden" name="payment_method" data-msg-required="PLEASE CHECK PAYMENT METHOD" required>
-                                    <span class="font-norm1">SHIPPING:</span> <strong>&#8369; {{ number_format($shipping, 2) }} </strong><br>
+                                    <input type="hidden" value="{{ $shipping_extra }}" id="shipping_extra"/>
+                                    <span class="font-norm1" >EXTRA FEE:</span> <strong>&#8369; {{ number_format($shipping_extra, 2) }} </strong><br>
+                                    <span class="font-norm1" >SHIPPING:</span> <strong>&#8369; <span name="shipping"> 0.00</span> </strong><br>
                                     <span class="font-norm1">ORDER TOTAL:</span> <strong>&#8369; {{ number_format($order_total, 2) }} </strong>
                                   </div>
                                 </div>
@@ -195,7 +248,8 @@
                   </h5> 
                   
                   <h5 class="mt-10 mb-10">
-                    <span class="font-norm1">SHIPPING:</span> <strong style="font-size:20px">&#8369; {{ number_format($total_shipping, 2) }}</strong>
+                    {{-- <span class="font-norm1">TOTAL SHIPPING:</span> <strong style="font-size:20px">&#8369; <span id="total_shipping">{{ number_format($total_shipping, 2) }}</span></strong> --}}
+                    <span class="font-norm1">TOTAL SHIPPING:</span> <strong style="font-size:20px">&#8369; <span id="total_shipping"> 0.00 </span></strong>
                   </h5>
                   
                   <!-- DIVIDER -->
@@ -231,71 +285,184 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-  $('select[name="region"]').on('change', function() {
-      var regn_hash = $(this).val();
-      if(regn_hash) {
-      $.ajax({
-      url: '/get-province-list/'+encodeURI(regn_hash),
-      type: "GET",
-      dataType: "json",
-      success:function(data) {
-          $('select[name="province"]').empty();
-          $('select[name="city"]').empty();
-          $('select[name="barangay"]').empty();
-          $.each(data, function(key, value) {
-          // <option selected disabled="disabled" selected="selected" value="default">SELECT PROVINCE</option>
-          $('select[name="province"]').append('<option value="'+ value.prov_hash +'">'+ value.province +'</option>');
-          });
-          }
-        });
-      }else{
-      $('select[name="province"]').empty();
-      }
-  });
-});
 
-$(document).ready(function() {
-  $('select[name="province"]').on('change', function() {
-      var prov_hash = $(this).val();
-      if(prov_hash) {
-      $.ajax({
-      url: '/get-city-list/'+encodeURI(prov_hash),
-      type: "GET",
-      dataType: "json",
-      success:function(data) {
-          $('select[name="city"]').empty();
-          $.each(data, function(key, value) {
-          $('select[name="city"]').append('<option value="'+ value.city_hash +'">'+ value.city +'</option>');
-          });
-          }
-        });
-      }else{
-      $('select[name="city"]').empty();
-      }
-  });
-});
-
-$(document).ready(function() {
   $('select[name="city"]').on('change', function() {
-      var city_hash = $(this).val();
+      var city_hash = $('select[name="city"]').val();
+
       if(city_hash) {
       $.ajax({
       url: '/get-barangay-list/'+encodeURI(city_hash),
       type: "GET",
       dataType: "json",
       success:function(data) {
-      // console.log(data);
-          $('select[name="barangay"]').empty();
+        // console.log(data);
           $.each(data, function(key, value) {
-          $('select[name="barangay"]').append('<option value="'+ value.brgy_hash +'">'+ value.barangay +'</option>');
+          // $('span[name="shipping"]').trigger("change");
+          var shipping_extra = parseFloat($('#shipping_extra').val());
+          var shipping_fee = parseFloat(value.shipping_fee);
+          var shipping = shipping_fee+shipping_extra;
+          $('span[name="shipping"]').html(shipping);
+
+
+          var total_shipping = 0;
+          var total_shipping_extra = 0;
+
+            $('span[name="shipping"]').each(function(){
+              total_shipping += parseFloat($(this).html());
+            });
+
+            $('#shipping_extra').each(function(){
+              total_shipping_extra += parseFloat($(this).val());
+            });
+          
+          var grand_total_shipping = total_shipping + total_shipping_extra;
+          $('#total_shipping').html(grand_total_shipping);
           });
-          }
+        }
         });
-      }else{
-      $('select[name="barangay"]').empty();
+      // }else{
+      // $('span[name="shipping"]').empty();
       }
   });
+  
 });
+
+
+var changeLocation = function(){
+
+$('select.location').prop('disabled', true);
+
+var region=$('#region option:selected').val();
+
+if(region!=0){
+    $('#province').prop('disabled', false);
+}else{
+    $('#province').prop('disabled', true);
+}
+
+// Province
+$('#province option').each(function(){
+    $(this).removeClass('hidden');
+    var p_region = $(this).data('region');
+    if(p_region!=region){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+
+var prov_id = $('#province').find("option:not(.hidden):eq(0)").val();
+$('#province').val(prov_id).trigger("change");
+
+// City
+$('#city option').each(function(){
+    $(this).removeClass('hidden');
+    var c_province = $(this).data('province');
+    if(c_province!=prov_id){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+
+var cit_id = $('#city').find("option:not(.hidden):eq(0)").val();
+$('#city').val(cit_id).trigger("change");
+
+// Barangay
+$('#barangay option').each(function(){
+    $(this).removeClass('hidden');
+    var b_city = $(this).data('city');
+    if(b_city!=cit_id){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+
+var brngy_id = $('#barangay').find("option:not(.hidden):eq(0)").val();
+$('#barangay').val(brngy_id).trigger("change");      
+
+
+};
+
+$('#region').on("change", function(){
+changeLocation();                
+}); 
+
+changeLocation();     
+
+
+$('#province').on("change", function(){
+
+var prov_id = $(this).val();
+
+if(prov_id!=0){
+    $('#city').prop('disabled', false);
+}else{
+    $('#city').prop('disabled', true);
+}
+
+// City
+$('#city option').each(function(){
+    $(this).removeClass('hidden');
+    var c_province = $(this).data('province');
+    if(c_province!=prov_id){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+
+var cit_id = $('#city').find("option:not(.hidden):eq(0)").val();
+$('#city').val(cit_id).trigger("change");
+
+// Barangay
+$('#barangay option').each(function(){
+    $(this).removeClass('hidden');
+    var b_city = $(this).data('city');
+    if(b_city!=cit_id){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+
+var brngy_id = $('#barangay').find("option:not(.hidden):eq(0)").val();
+$('#barangay').val(brngy_id).trigger("change");               
+});      
+
+$('#city').on("change", function(){
+var cit_id = $(this).val();
+
+if(cit_id!=0){
+    $('#barangay').prop('disabled', false);
+}else{
+    $('#barangay').prop('disabled', true);
+}
+
+// Barangay
+$('#barangay option').each(function(){
+    $(this).removeClass('hidden');
+    var b_city = $(this).data('city');
+    if(b_city!=cit_id){
+        if($(this).hasClass('default')){
+            return;
+        }else{  
+            $(this).addClass('hidden');
+        }
+    }
+});
+}); 
 
 
  var initializeControls = function() {
@@ -408,13 +575,13 @@ $('.btn_cod').click(function() {
 //   $(".barangay").change();
 // });
 
-    $('input').keypress(function(evt) {
+    // $('input').keypress(function(evt) {
 
-        if (evt.keyCode == 13) {
-            $('#btnpayment').click();
-        }
+    //     if (evt.keyCode == 13) {
+    //         $('#btnpayment').click();
+    //     }
 
-    });
+    // });
  
 
 

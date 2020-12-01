@@ -9,6 +9,7 @@ use App\Models\CartHeader;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Hash;
+use Mail;
 use Session;
 use DB;
 
@@ -32,27 +33,27 @@ class UsersController extends Controller
      */
     public function create(Request $request)
     {
+        $otp = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 8);
 
         $validator= Validator::make($request->all(),
             [
                 'fullname' => 'required|regex:/^[a-zA-Z\s]+$/',
-                'email' => 'required|email:rfc,dns',
+                'email' => 'required|email:rfc,dns|unique:user,email',
                 'contact_no' => 'required|regex:/(09)[0-9]{9}$/',
                 'password' => 'required'
             ]
-            
+            // ,
+            // $message = [
+            //     'email.email' => 'The Email format must be ******@gmail.com .',
+            //     'email.unique' => 'The Email is already been used.',
+            //     'contact_no.regex' => 'The Contact Number format is invalid must be (09XXXXXXXXX).',
+            // ]
         );
-        
-        $message = [
-            'required' => 'The :attribute field is required.',
-            'contact_no.required' => 'Contact Number must be (09XXXXXXXXX)',
-            
-        ];
+        // )->validate();
 
         if($validator->fails()){
             $response['stat']='error';
-            // $response['msg'] =$message;
-            $response['msg']='<b>Please fill out all required field.</b> <br> <b>Contact Number must be (09XXXXXXXXX).</b>';
+            $response['msg'] =$validator->errors();
             echo json_encode($response);
         } else {
             
@@ -60,11 +61,11 @@ class UsersController extends Controller
         $user->fullname = $request->input('fullname');
         $user->email = $request->input('email');
         $user->contact_no = $request->input('contact_no');
-        // $user->password = $request->input('password');
         $user->password = Hash::make($request['password']);
         $user->type = 'US';
         $user->status = 'A';
         $user->create_datetime = Carbon::now();
+        $user->otp = $otp;
         $user->save();
 
         //For SRHR
@@ -79,11 +80,19 @@ class UsersController extends Controller
 
         $data = array(
             'user_hash' => $user->user_hash,
-            'email' => $request->input('fullname')
+            'email' => $request->input('email'),
+            'otp' => $otp,
+            'fullname' => $request->input('fullname')
             );
+
+            Mail::send([], [], function ($message) use ($data) {
+                $message->to($data['email'])
+                    ->subject('Verify Email Address')
+                    ->setBody('Hi, ' .$data['fullname']. ' Welcome to Azspree! Please verify your account. Verification Code: '.$data['otp'] , 'text/html'); // for HTML rich messages
+              });
                 
         $response['stat']='success';
-        $response['msg']='<b>Successfully Signup.</b> Please login now.';
+        $response['msg']='<b>Successfully Signup.</b> Please check Your Registered Email for Verification Code to login.';
         echo json_encode($response);
         }        
 

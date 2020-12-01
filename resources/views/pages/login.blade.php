@@ -1,29 +1,35 @@
 @extends('pages.index')
 
 @section('content')
-<div class="grey-light-bg clearfix">    
+<div class="white-bg clearfix">    
     <!-- COTENT CONTAINER -->
     <div class="container white-bg mt-80 mb-10 " >
+      <div class="row">
+        <div class="col-md-12">
+          <br>
+          &nbsp;
+          <br>
+        </div>
+      </div>
 
           <div class="col-md-6">
             <div class="relative">
-                      
               <div class="col-md-12" style="align-content: center;">
                   <div class="mt-80 mb-10">
-             <!-- TITLE -->
-             <div class="mb-40" style="text-align: center">
-              <img src="/brands_try/azspree_logo.png" class="" alt="Azspree">
-              <br><br><br><br>  
-              <button class="btn btn-primary" style="width: 80%" ><i class="fa fa-facebook" aria-hidden="true"></i> Login with Facebook</button>
-              <br>&nbsp;
-                <!-- DIVIDER -->
-                <hr class="mt-0 mb-10">
-                <br>&nbsp;
-              <button class="btn btn-danger" style="width: 80%" ><i class="fa fa-google" aria-hidden="true"></i> Login with Gmail</button>
-                {{-- <img src="/brands_try/azspree_logo.png" class="" alt="Azspree"> --}}
-              </a>
-            </div>
-          </div>
+                  <!-- TITLE -->
+                  <div class="mb-40" style="text-align: center">
+                    <img src="/brands_try/azspreelogo.png" class="" alt="Azspree">
+                    <br><br><br><br>  
+                    <button class="btn btn-primary" style="width: 80%" ><i class="fa fa-facebook" aria-hidden="true"></i> Login with Facebook</button>
+                    <br>&nbsp;
+                      <!-- DIVIDER -->
+                      <hr class="mt-0 mb-10">
+                      <br>&nbsp;
+                      <a href="{{ url('auth/google') }}" class="btn btn-danger" style="width: 80%" ><i class="fa fa-google" aria-hidden="true"></i> Login with Gmail
+                      {{-- <img src="/brands_try/azspree_logo.png" class="" alt="Azspree"> --}}
+                    </a>
+                  </div>
+                  </div>
               </div>
             </div>
           </div>
@@ -31,23 +37,20 @@
 
           <div class="col-md-6">
             <div class="relative">
-                      
               <div class="col-md-12" style="align-content: center;">
                   <div class="mt-80 mb-10">
                     <!-- TITLE -->
                     <div class="mb-40">
                       <h2 class="bold" style="color:rgb(57, 57, 199)">LOG <span style="color:black">IN</span> </h2>
                       <label>Hello, Welcome to your account.</label>
-                    </div>
-                                  
+                    </div>      
                     <!-- LOGIN FORM -->
                     <div>
                       <form id="login_form" autocomplete="off">
-
                         <div class="row row-error">
                           <div class="col-md-12">
                             <div class="alert alert-danger nobottommargin">
-                              <span aria-hidden="true" class="alert-icon icon_blocked"></span>Invalid email or password.
+                              <span aria-hidden="true" class="alert-icon icon_blocked"></span><span class="msg">Invalid email or password.</span>
                             </div>
                           </div>
                         </div>
@@ -85,21 +88,48 @@
                             <h5>Don't have an account? <a href="/signup" style="color:rgb(57, 57, 199)" ><u>Create an Account</u></a></h5>
                           </div>
                         </div>
-                        
+
+                        <div class="row">
+                          <div class="col-md-12">
+                            <br>
+                            &nbsp;
+                            <br>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <br>
+                            &nbsp;
+                            <br>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <br>
+                            &nbsp;
+                            <br>
+                          </div>
+                        </div>
                       </form>	
                     </div>
+
+                    {{-- <div id="otpdiv" >
+                      <div class="form-group">
+                        <label for="emotpail">OTP:</label>
+                        <input type="otp" class="form-control" id="otp" placeholder="Enter OTP" name="otp">
+                      </div>
+                      <button id="otpSubmit" class="btn btn-primary">Submit</button>
+                  </div> --}}
+
                   </div>
                 </div>
             </div>
           </div>
+
     </div>
 </div>
-
-  @stop
+@stop
   
-
- 
- 
 @section('embeddedjs')
 <script type="text/javascript">
 
@@ -165,7 +195,13 @@
               setTimeout(function(){
                   window.location.href = "/profile";
               },600);
+          }else if (response.stat=="verify") {
+            $('.row-verify').fadeIn(200);
+              setTimeout(function(){
+                  window.location.href = "/verify";
+              },600);
           }else{
+            $('.msg').html(response.msg);
             $('.row-error').fadeIn(200);
           }
       });

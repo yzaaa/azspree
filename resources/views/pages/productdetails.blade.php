@@ -49,8 +49,8 @@
                     <div class="col-md-4 col-sm-12 mb-50">
 
                         <div class="post-prev-img popup-gallery">
-                            <a style="height: 370px; width: 100px;" href="/images/products/{{$data['products']->image_path}}">
-                                <img style="height: 450px; width: 350px;" src="/images/products/{{$data['products']->image_path}}"
+                            <a href="/images/products/{{$data['products']->image_path}}">
+                                <img src="/images/products/{{$data['products']->image_path}}"
                                     alt="img"></a>
                         </div>
                         {{-- <div class="sale-label-cont">
@@ -61,7 +61,7 @@
                             <div class="popup-gallery">
                                 {{-- yung 1 yun yung sumr_hash = seller and yung 2 naman inmr_hash = product id --}}
                                 @foreach(File::glob(public_path('images/products/'.$data['products']->sumr_hash).'/'.$data['products']->inmr_hash.'/*') as $path)
-                                <div class="col-xs-4 post-prev-img" style="height: 100px; width: 100px;">
+                                <div class="col-xs-4 post-prev-img">
                                     <a href="{{ str_replace(public_path(''), '', $path) }}">
                                         <img src="{{ str_replace(public_path(''), '', $path ) }}" alt="img"></a>
                                 </div>
@@ -80,6 +80,8 @@
                             <h3><label class="mt-0 mb-30">{{ $data['products']->product_name }}</label></h3>
                             <input type="hidden" name="inmr_hash" id="inmr_hash" value="{{ $data['products']->inmr_hash }}" />
                             <input type="hidden" name="sumr_hash" id="sumr_hash" value="{{ $data['products']->sumr_hash }}" />
+                            <input type="hidden" name="dimension" id="dimension" value="{{ $data['products']->dimension }}" />
+                            <input type="hidden" name="weight" id="weight" value="{{ $data['products']->weight }}" />
                             <hr class="mt-0 mb-30">
                             <div class="row">
 
@@ -117,7 +119,7 @@
                                     <span class="slash-divider">></span> <label style="color:black">{{ $data['products']->subcat_name }}</label>
                                 </div>
                                 <?php if ($data['products']->available_qty <= '0'){ ?> 
-                                    <div>Out of Stocks.</div> 
+                                    <div style="font-size:14px" class="label label-danger">Out of Stocks.</div> 
                                 <?php }else{ ?> 
                                     <div>Available: <label style="color:black">{{$data['products']->available_qty}}</label></div>
                                 <?php }?>
@@ -131,7 +133,11 @@
                             <hr class="mt-0 mb-30">
 
                             <div class="mb-30">
-                                <label>{{ $data['products']->product_desc }}</label>
+                                <label>{{ $data['products']->product_desc }}</label><br>
+                                <label>Length: {{ $data['products']->length }}</label><br>
+                                <label>Width: {{ $data['products']->width }}</label><br>
+                                <label>Height: {{ $data['products']->height }}</label><br>
+                                <label>Weight: {{ $data['products']->weight }}</label><br>
                                 {{-- Product Description --}}
                             </div>
 

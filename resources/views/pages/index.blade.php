@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        {{-- <script data-ad-client="ca-pub-9911749335545567" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> --}}
         <title>{{config('app.name', 'Azspree')}}</title>
         <meta charset=utf-8 >
 		<meta name="robots" content="index, follow" > 
@@ -28,8 +29,8 @@
                 <div class="grey-bg">
                     @include('include.topnav')
                     @yield('content')
-                    {{-- @include('include.shopinfo')
-                    @include('include.footer') --}}
+                    @include('include.shopinfo')
+                    @include('include.footer')
                 </div>
             </div>
             @include('include.tempjs')

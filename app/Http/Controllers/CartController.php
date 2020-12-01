@@ -82,13 +82,12 @@ class CartController extends Controller
             ->get();
 
             // $data['address'] = DB::table('addr')->distinct('region')->distinct('province')->distinct('city')->distinct('barangay')->get();
-            
             // $data['region'] =  DB::table('addr')->select('region')->distinct()->where('addr.region', 'Region 3 Central Luzon')->get();
-            // $data['province'] =  DB::table('addr')->select('province')->distinct()->where('addr.region', 'Region 3 Central Luzon')->get();
-            // $data['city'] =  DB::table('addr')->select('city')->distinct()->where('addr.province', 'Pampanga')->get();
-            // $data['barangay'] =  DB::table('addr')->select('barangay')->distinct()->where('addr.province', 'Pampanga')->orderBy('addr.province', 'desc')->get();
-
+    
             $data['tbl_region'] =  DB::table('regn')->get();
+            $data['tbl_province'] =  DB::table('prov')->get();
+            $data['tbl_city'] =  DB::table('city')->get();
+            $data['tbl_brgy'] =  DB::table('brgy')->get();
 
         return view('pages.checkout')->with('data', $data);
     }else{
@@ -121,15 +120,22 @@ class CartController extends Controller
 
     public function getBarangayList($city_hash)
     {
-    $barangay =  DB::table('brgy')
-    ->leftJoin('regn', 'regn.regn_hash', '=', 'brgy.regn_hash')
-    ->leftJoin('prov', 'prov.prov_hash', '=', 'brgy.prov_hash')
-    ->leftJoin('city', 'city.city_hash', '=', 'brgy.city_hash')
-    ->select('brgy_hash','barangay')
-    ->where('brgy.city_hash', $city_hash )
-    ->get();
+    // $barangay =  DB::table('brgy')
+    // ->leftJoin('regn', 'regn.regn_hash', '=', 'brgy.regn_hash')
+    // ->leftJoin('prov', 'prov.prov_hash', '=', 'brgy.prov_hash')
+    // ->leftJoin('city', 'city.city_hash', '=', 'brgy.city_hash')
+    // ->select('brgy_hash','barangay')
+    // ->where('brgy.city_hash', $city_hash )
+    // ->get();
+    $ursf = DB::table('ursf')
+            ->select('shipping_fee')
+            ->where('city_hash', $city_hash)
+            ->get();
 
-    return response()->json($barangay);
+
+
+
+    return response()->json($ursf);
     }
 
     /**
@@ -170,6 +176,8 @@ class CartController extends Controller
             $addcart->qty = $request->input('qty');
             $addcart->variant_1 = $request->input('variant_1');
             $addcart->variant_2 = $request->input('variant_2');
+            $addcart->dimension = $request['dimension'];
+            $addcart->weight = $request['weight'];
             $addcart->create_datetime = Carbon::now();
             $addcart->save();
 
@@ -208,20 +216,12 @@ class CartController extends Controller
             $srhr_hash = session('user_hash');
             $title = 'MyOrder';
             $data['oder'] =  User::where('is_deleted', 0)->findOrFail($srhr_hash);
-
-            $addr_hash = DB::table('addr')
-            ->select('addr_hash')
-            ->where('region', $request['region'])
-            ->where('province', $request['province'])
-            ->where('city', $request['city'])
-            ->where('barangay', $request['barangay'])
+            
+            $ursf = DB::table('ursf')
+            ->select('shipping_fee')
+            ->where('city_hash', $request->input('city'))
+            // ->where('sumr_sumr', $request->input('city'))
             ->get();
-          
-            if (count($addr_hash) <= 0){
-                $addr_hash_id = 0;
-            }else{
-                $addr_hash_id = $addr_hash[0]->addr_hash;
-            }
         
             $mycart = CartDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'srln.inmr_hash')
             ->where('srln.srhr_hash', $srhr_hash)
@@ -247,15 +247,24 @@ class CartController extends Controller
                 $order_subtotal = 0; 
                 $total_qty = 0; 
                 $shipping = 0; 
+                $shipping_extra = 0;
+                $shipping_city = 0; 
                 $order_total = 0; 
                 $cart_subtotal = 0; 
                 $total_shipping = 0; 
                 $total_payment = 0;
+                $dimension = 0;
+                $weight = 0;
+                $total_kg = 0;
+                $max_kg = 5;
 
                 $order = new OrderHeader();
                 $order->order_no = date('Ymd').'-';
                 $order->order_date = date("Y-m-d");
-                $order->addr_hash = $addr_hash_id;    
+                $order->regn_hash = $request->input('region');
+                $order->prov_hash = $request->input('province');
+                $order->city_hash = $request->input('city');
+                $order->brgy_hash = $request->input('barangay');
                 $order->address = $request->input('address');
                 $order->user_hash = $srhr_hash;
                 $order->sumr_hash = $supplier[$i]->sumr_hash;
@@ -264,22 +273,60 @@ class CartController extends Controller
                 $order->save();
 
                 $sohr_hash = $order->sohr_hash;
+                
 
                 for ($a=0; $a < count($mycart); $a++) { 
-
                     if($supplier[$i]->sumr_hash == $mycart[$a]->sumr_hash){
 
                         $unit_total =$mycart[$a]->unit_price * $mycart[$a]->qty; 
                         $order_subtotal += $unit_total;
-                        $shipping = 55;
-                        $order_total = $order_subtotal+$shipping; 
                         $total_qty += $mycart[$a]->qty;
-    
+
+                        $shipping_city= $ursf[0]->shipping_fee;
+                        $dimension = $mycart[$a]->dimension;
+                        $weight = $mycart[$a]->weight;
+
+                        if ($dimension > $weight){
+                            if ($dimension > $max_kg){
+                                $sub_1= ($dimension - $max_kg);
+                                $sub_2 = ($sub_1 * $max_kg );
+                                $total_kg = ($sub_2 * $mycart[$a]->qty );
+                            }else{
+                                $total_kg = $dimension;
+
+                            }
+                        }else if($dimension = $weight){
+                            if ($weight > $max_kg){
+                                $sub_1= ($weight - $max_kg);
+                                $sub_2 = ($sub_1 * $max_kg );
+                                $total_kg = ($sub_2 * $mycart[$a]->qty );
+                            }else{
+                                $total_kg = $weight;
+
+                            }
+                        }else{
+                            if ($weight > $max_kg){
+                                $sub_1= ($weight - $max_kg);
+                                $sub_2 = ($sub_1 * $max_kg);
+                                $total_kg = ($sub_2 * $mycart[$a ]->qty );
+                            }else{
+                                $total_kg = $weight;
+
+                            }
+                        }
+                        $shipping_extra += $total_kg;
+                        $shipping = $shipping_extra + $shipping_city;
+                        $order_total = $order_subtotal+$shipping; 
+                        
                         $orderdetail = new OrderDetail();
                         $orderdetail->sohr_hash = $sohr_hash;
                         $orderdetail->inmr_hash = $mycart[$a]->inmr_hash;
                         $orderdetail->qty = $mycart[$a]->qty;
                         $orderdetail->unit_price = $mycart[$a]->unit_price;
+                        $orderdetail->dimension = $mycart[$a]->dimension;
+                        $orderdetail->weight = $mycart[$a]->weight;
+                        $orderdetail->excess_fee = $sub_2;
+                        $orderdetail->excess_kg = $sub_1;
                         $orderdetail->create_datetime = Carbon::now();
                         $orderdetail->save();
 
@@ -290,6 +337,7 @@ class CartController extends Controller
                     }   
 
                 }
+                // sleep(60);
 
                 $order = OrderHeader::findOrFail($sohr_hash);
                 $order->order_no = date('Ymd').'-'.$sohr_hash;
@@ -299,19 +347,9 @@ class CartController extends Controller
                 $order->disc_amt = 0;
                 $order->order_total = $order_total;
                 $order->save();
-
             }
+            DB::table('user')->where('user_hash', $sohr_hash)->update(['regn_hash' => $request->input('barangay'), 'prov_hash' => $request->input('province'), 'city_hash' => $request->input('city'), 'brgy_hash' => $request->input('region'), 'address' => $request->input('address')]);  
 
-            DB::table('user')->where('user_hash', $sohr_hash)->update(['region' => $request['region'], 'province' => $request['province'], 'city' => $request['city'], 'barangay' => $request['barangay'], 'address' => $request['address'] ]);  
-
-
-            // $order = OrderHeader::findOrFail($order->sohr_hash);
-            // $sohr_hash = $order->sohr_hash;
-            
-            // $data = array(
-            //     'sohr_hash' => $order->sohr_hash,
-            //     );
-                    
             $response['stat']='success';
             $response['msg']='<b>ORDER PLACED SUCCESSFULLY.</b>';
             echo json_encode($response);
@@ -351,6 +389,7 @@ class CartController extends Controller
         ->leftJoin('user', 'user.user_hash', '=', 'cmnt.user_hash')
         ->leftJoin('sumr', 'sumr.sumr_hash', '=', 'cmnt.sumr_hash')
         ->where('cmnt.inmr_hash',$id)
+        ->orderBy('cmnt.cmnt_hash','desc')
         ->paginate(3);
 
         $data['order'] = OrderDetail::leftJoin('inmr', 'inmr.inmr_hash', '=', 'soln.inmr_hash')

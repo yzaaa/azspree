@@ -2,7 +2,67 @@
 
 @section('embeddedcss')
 <style scoped>
- .fa-star:before {
+  .star-rating {
+  font-size: 0;
+  white-space: nowrap;
+  display: inline-block;
+  width: 250px;
+  height: 50px;
+  overflow: hidden;
+  position: relative;
+  background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+  background-size: 50px;
+}
+.star-rating i {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 20%;
+  z-index: 1;
+  background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+  background-size: 50px;
+}
+.star-rating input {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  opacity: 0;
+  display: inline-block;
+  width: 20%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 2;
+  position: relative;
+}
+.star-rating input:hover + i,
+.star-rating input:checked + i {
+  opacity: 1;
+}
+.star-rating i ~ i {
+  width: 40%;
+}
+.star-rating i ~ i ~ i {
+  width: 60%;
+}
+.star-rating i ~ i ~ i ~ i {
+  width: 80%;
+}
+.star-rating i ~ i ~ i ~ i ~ i {
+  width: 100%;
+}
+::after,
+::before {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  text-align: center;
+  vertical-align: middle;
+}
+
+ /* .fa-star:before {
     content: "\f005";
 }
 
@@ -62,7 +122,7 @@ label.star:hover { transform: rotate(-15deg) scale(1.3); }
 label.star:before {
   content: '\f006';
   font-family: FontAwesome;
-}
+} */
 </style>
 @endsection
 
@@ -91,13 +151,15 @@ label.star:before {
                             
                             <table class="table">
                                 <thead>
+                                  <form method="get" action="/sort" class="form">
                                     <tr>
-                                        <th><b><a href="#">ALL</a></b></th>
-                                        <th><b><a href="#">TO SHIP</a></b></th>
-                                        <th><b><a href="#">TO RECEIVE</a></b></th>
-                                        <th><b><a href="#">COMPLETED</a></b></th>
-                                        <th><b><a href="#">CANCELED</a></b></th>
+                                        <th><button type="submit" name="sort" value="all"><strong>ALL</strong></button></th>
+                                        <th><button type="submit" name="sort" value="TO SHIP"><strong>TO SHIP</strong></button></th>
+                                        <th><button name="sort" value="TO RECEIVE"><strong>TO RECEIVE</strong></button></th>
+                                        <th><button name="sort" value="COMPLETED"><strong>COMPLETED</strong></button></th>
+                                        <th><button name="sort" value="CANCELLED"><strong>CANCELLED</strong></button></th>
                                     </tr>
+                                  </form>
                                 </thead>
                           
                             <tbody>
@@ -113,7 +175,7 @@ label.star:before {
                                                   <label class="label label-primary" style="color:white; font-size:15px">Order Number {{ $order_no->order_no }}</label><br>
                                                 </div>
                                                 <div class="col-md-6">
-                                                  <b style="color:rgb(72, 99, 160); float: right;"> {{ $order_no->status }}</b><br>
+                                                  <b style="color:rgb(72, 99, 160); float: right;"> {{ $order_no->status_user }}</b><br>
                                                 </div>
                                             </div>
                                             <br><hr class="mt-0 mb-10">
@@ -141,7 +203,7 @@ label.star:before {
                                               <div class="row">
                                               {{-- SHOW ONCED RECEIVED ORDER --}}
                                               <?php 
-                                              if($order->status == 'COMPLETED'){
+                                              if($order->status_user == 'COMPLETED'){
                                               ?> 
                                               <div class="col-md-12" >
                                               <div style="float: right" >
@@ -172,7 +234,7 @@ label.star:before {
                                             </div>
                                             {{-- SHOW WHEN ORDER DELIVERED--}}
                                             <?php 
-                                            if($order_no->status == 'DELIVERED'){
+                                            if($order_no->status_user == 'DELIVERED'){
                                             ?> 
                                             <div class="row">
                                             <div class="col-md-12" >
@@ -228,7 +290,14 @@ label.star:before {
                                 </div>
                                 <div class="row">
                                   <div class="col-md-12 star" style="text-align: center">
-                                      <input class="star star-5" id="star-5" type="radio" name="rating" value="5"/>
+                                    <span class="star-rating">
+                                      <input type="radio" name="rating" value="1"><i></i>
+                                      <input type="radio" name="rating" value="2"><i></i>
+                                      <input type="radio" name="rating" value="3"><i></i>
+                                      <input type="radio" name="rating" value="4"><i></i>
+                                      <input type="radio" name="rating" value="5" checked><i></i>
+                                    </span>
+                                      {{-- <input class="star star-5" id="star-5" type="radio" name="rating" value="5"/>
                                       <label class="star star-5" for="star-5"></label>
                                       <input class="star star-4" id="star-4" type="radio" name="rating" value="4"/>
                                       <label class="star star-4" for="star-4"></label>
@@ -237,7 +306,7 @@ label.star:before {
                                       <input class="star star-2" id="star-2" type="radio" name="rating" value="2"/>
                                       <label class="star star-2" for="star-2"></label>
                                       <input class="star star-1" id="star-1" type="radio" name="rating" value="1"/>
-                                      <label class="star star-1" for="star-1"></label>
+                                      <label class="star star-1" for="star-1"></label> --}}
                                       {{-- <ul class="list-inline rating-list"> 
                                       <li><i class="star fa fa-star yellow" name="rating" value="1"></i></li>
                                       <li><i class="star fa fa-star yellow" name="rating" value="2"></i></li>
@@ -300,7 +369,6 @@ label.star:before {
                                 </div>
                                 <?php } ?>
                                 <?php endforeach; ?>
-                                <input type="hidden" name="status" value="COMPLETED">
                               </div>
                               <div class="modal-footer">
                                 <a href="/updatestatus/{{ $order_no->sohr_hash }}" type="button" class="btn btn-primary">Confirm Now</a>
@@ -328,9 +396,6 @@ label.star:before {
 @section('embeddedjs')
 <script type="text/javascript">
 
-document.getElementById("btn-close").addEventListener("click", function(){ 
-   document.getElementById("#ModalReview{{$order->inmr_hash}}").reset();
-});
 
 </script>
 @endsection

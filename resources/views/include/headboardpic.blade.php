@@ -34,27 +34,27 @@
             <ul class="slides">
             
               <!-- SLIDE 1 -->
-              {{-- <li style="background: url(/brands_try/real.jpg) no-repeat;background-position:50% 0"> --}}
               <li style="background: url(/brands_try/real.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
                 <div class="container">
                   <div class="contain">
-                    {{-- <h2 data-toptitle="35%" class="light-100 flex-top-bot">AZSPREE</h2>
-                    <p data-bottomtext="35%" class="light-100 flex-bot-top" style="font-size: 50px"><span class="bold">COMING SOON!</span></p> --}}
                   </div>
                 </div><!-- End Container -->
-              
+              </li><!-- End item -->
+
+              <li style="background: url(/brands_try/7.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
+                <div class="container">
+                  <div class="contain">
+                  </div>
+                </div><!-- End Container -->
               </li><!-- End item -->
               
               <!-- SLIDE 2 -->  
-              {{-- <li style="background:url(/brands_try/try.jpg) no-repeat; background-position:50% 0">
-                
+              <li style="background: url(/brands_try/Tarpuline.jpg); background-repeat: no-repeat; background-position:50% 0; background-size: 100% 100%;">
                 <div class="container">
                   <div class="sixteen columns contain">
-                 
                   </div>
                 </div><!-- End Container -->
-                
-              </li><!-- End item --> --}}
+              </li><!-- End item -->
                
               <!-- SLIDE 3 -->
               {{-- <li style="background:url(/HTML/images/flexslider/shop3.jpg) no-repeat; background-position:50% 0">

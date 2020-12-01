@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="grey-light-bg clearfix">
+<div class="white-bg clearfix">
     <!-- COTENT CONTAINER -->
     <div class="container white-bg plr-30 pt-30 pb-30 mt-80 mb-10 ">
 
@@ -91,6 +91,7 @@
                                             <div class="row">
                                                 <div class="col-md-12 mb-30">
                                                     <label>* Contact No.</label>
+                                                    Format must be (09XXXXXXXXX)
                                                     <input type="number"
                                                         {{-- pattern="\d{4}[\-]\d{3}[\-]\d{4}" --}}
                                                         data-msg-required="Please enter your Contact Number"
@@ -254,7 +255,10 @@
                     },1000);
                 } else {
                     $('.row-error').show();
-                    $('.error_msg').html(response.msg);
+                    $('.error_msg').html(response.msg.fullname);
+                    $('.error_msg').html(response.msg.email);
+                    $('.error_msg').html(response.msg.contact_no);
+                    $('.error_msg').html(response.msg.password);
                     // $('.error_msg').html(response.msg, response.$msg['required'], response.$msg['contact_no.required']);
                     $('.row-error').fadeIn(400);
                 }

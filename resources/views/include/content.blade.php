@@ -1,7 +1,7 @@
 
 
 <div id="wrap" class="boxed ">
-  <div class="container-p-75 grey-bg"> <!-- Grey BG  -->	
+  <div class="container-p-75 grey-bg" > <!-- Grey BG  -->	
      <div class="page-section indent-header">
       <div class="relative">
         <h5 class="widget-title" style="color: rgb(72, 99, 160);">Categories</h5>	
@@ -18,68 +18,43 @@
 </div>  
 
 <!-- CONTENT -->
-<div class="page-section p-100-cont">
+<div class="page-section p-100-cont" >
   <div class="container">
     <div class="row">
       
-      <!-- CONTENT -->
-      <div class="row">
-      <div class="col-sm-9">
-        <div class="clearfix mb-70">
-               <!-- SEARCH -->
-        <div class="widget">
-          <form class="form-search widget-search-form" action="/search" method="get">
-            <input type="text" name="product_details" class="input-search-widget" placeholder="Search">
-            <button class="" type="submit" title="Start Search">
-              <span aria-hidden="true" class="icon_search"></span>
-            </button>
-          </form>
+        <!-- CONTENT -->
+        <div class="row">
+          <div class="col-sm-9">
+            <div class="widget">
+              <form class="form-search widget-search-form" action="/search" method="get">
+                <input type="text" name="product_details" class="input-search-widget" placeholder="Search">
+                <button class="" type="submit" title="Start Search">
+                  <span aria-hidden="true" class="icon_search"></span>
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
-      </div>
           
-        <div class="col-sm3">
-          <div class="right">
-              <form method="get" action="/sortbyprice" class="form">
-                {{ csrf_field() }}
-                  <select class="select-md form" name="sortbyprice" onchange="this.form.submit()">
-                      <option selected disabled="disabled" selected="selected">Sort by Price</option>
-                      <option value="desc">Price: High to Low</option>
-                      <option value="asc">Price: Low to High</option>
-                  </select>
-                </form>
-                  {{-- <select class="select-md control" name="sorybyprice">
-                    <option selected disabled="disabled" selected="selected">Sort by Price</option>
-                    <option value="l2h">Low - High Price</option>
-                    <option value="h2l">High - Low Price</option>
-                  </select> --}}
+          <div class="col-sm3">
+            <div class="right">
+                <form method="get" action="/sortbyprice/inct_hash" class="form">
+                  {{-- {{ csrf_field() }} --}}
+                    <select class="select-md form" name="sortbyprice" onchange="this.form.submit()">
+                        <option selected disabled="disabled" selected="selected">Sort by Price</option>
+                        <option value="desc">Price: High to Low</option>
+                        <option value="asc">Price: Low to High</option>
+                    </select>
+                  </form>
+            </div>
           </div>
-        </div>
-
-       
-
-        {{-- <div class="isotope-grid cols-3 mb-2">
-          <div class="grid-item">
-            <div class="product-card" data-price="1.00">$1.00</div>
-          </div>
-          <div class="grid-item">
-            <div class="product-card" data-price="10.00">$10.00</div>
-          </div>
-          <div class="grid-item">
-            <div class="product-card" data-price="5.00">$5.00</div>
-          </div>
-        </div> --}}
-
         </div>
         
-        <div class="isotope-grid">
+        <div class="row" >
           <!-- SHOP Item -->
           <?php foreach ($content as $products): ?>
-
-          <div class="grid-item">
-          <div class="col-md-3 col-lg-3 pb-80 card" >
-            <div class="post-prev-img centeredImageContainer" style="">  
-              <a href="/productdetails/{{$products->inmr_hash}}"><img class="centeredImage" style="height: 180px; width: 120px;" src="/images/products/{{$products->image_path}}" alt="img"></a>
+          <div class="col-md-2 col-lg-2 pb-80 card" >
+            <div class="post-prev-img">  
+              <a href="/productdetails/{{$products->inmr_hash}}"><img style="height: 250px; width: auto" src="/images/products/{{$products->image_path}}" alt="img"></a>
             </div>
             
             <div class="post-prev-title mb-5">
@@ -90,7 +65,6 @@
               <strong>&#8369; {{ number_format($products->cost_amt, 2) }}</strong>
             </div>
           </div>
-          </div>
 
           <?php endforeach; ?>        
           
@@ -98,7 +72,7 @@
         </div>
                         
         <!-- PAGINATION -->
-        <div class="mt-0">
+        <div class="mt-0" style="float: right;">
           <nav>
             {{ $content->links() }}
           </nav> 
